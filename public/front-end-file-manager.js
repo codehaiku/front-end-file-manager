@@ -17,7 +17,7 @@ jQuery(document).ready(function($){
 	fileCollection.on('add', function(file){
 		//console.log(file);
 	});
-	
+	window.counter = 0;
 	// Create the View
 	var FileView = Backbone.View.extend({
 		collection: fileCollection,
@@ -28,7 +28,12 @@ jQuery(document).ready(function($){
 			this.listenTo(this.collection, "add", this.render);
 		},
 		render: function(file){
-			file.attributes.file_icon = frontend_filemanager.asset_uri + "file-type-icons/file-word.svg";
+			window.counter++;
+			if ( counter % 2 == 0 ) {
+				file.attributes.file_icon = frontend_filemanager.asset_uri + "file-type-icons/file-word.svg";
+			} else {
+				file.attributes.file_icon = frontend_filemanager.asset_uri + "file-type-icons/file-archive.svg";
+			}
 			this.$el.append(this.template(file.attributes));
 		}
 	}); 
