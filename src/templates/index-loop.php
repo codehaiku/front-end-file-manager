@@ -22,13 +22,17 @@
 </div>
 
 <script id="fefm-single-file-template" type="text/template">
-	<li>
-		<img width="24" src="<%=file_icon%>" />
-		<%=file_name%>
-		<%=date_updated%>
-		<%=file_sharing_type%>
-		<a href="#">Edit</a>
-		<a href="#">Delete</a>
-		<a href="#">Copy</a>
+	<li class="file-item">
+		<div class="file-item-column file-thumb">
+			<img width="24" src="<%=file_icon%>" />
+		</div>
+		<div class="file-item-column file-label"><%=file_label%></div>
+		<div class="file-item-column file-date-updated"><%=date_updated%></div>
+		<div class="file-item-column file-sharing-type"><%=file_sharing_type%></div>
+		<div class="file-item-column file-actions">
+			<a href="#">Edit</a>
+			<a data-file-id="<%=id%>" class="fefm-item-file-trash" href="#">Trash</a></div>
+			<a href="#">Copy</a>
+		</div>
 	</li>
 </script>
