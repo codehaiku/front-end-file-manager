@@ -1,8 +1,7 @@
 <div id="fefm-wrap">
 	<ul id="fefm-controls">
-		<li><a href="#"><input placeholder="Search files" type="search"></a></li>
-		<li><a href="#">New Folder</a></li>
-		<li><a href="#">Upload files to "Current Directory"</a></li>
+		<li><a class="fefm-controls-btn" href="#">Upload</a></li>
+		<li><a class="fefm-controls-btn-link" href="#">New Folder</a></li>
 	</ul>
 	<ul id="fefm-navigation">
 		<li>
