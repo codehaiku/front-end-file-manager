@@ -28,7 +28,7 @@ jQuery(document).ready(function($){
 			this.listenTo(this.collection, "add", this.render);
 		},
 		render: function(file){
-			console.log(file.attributes)
+			file.attributes.file_icon = frontend_filemanager.asset_uri + "file-type-icons/file-word.svg";
 			this.$el.append(this.template(file.attributes));
 		}
 	}); 

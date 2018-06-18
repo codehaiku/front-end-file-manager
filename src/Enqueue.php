@@ -16,7 +16,8 @@ final class Enqueue {
 
 		wp_localize_script( 'frontend-filemanager', 'frontend_filemanager', array(
 			'rest_url' => rest_url('frontend-filemanager/v1/'),
-			'nonce' => wp_create_nonce( 'wp_rest' )
+			'nonce' => wp_create_nonce( 'wp_rest' ),
+			'asset_uri' => trailingslashit(plugins_url()). 'front-end-file-manager/public/images/'
 		));
 	}
 
