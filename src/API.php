@@ -41,9 +41,10 @@ final class Api {
 		if ( $movefile && ! isset( $movefile['error'] ) ) {
 		    
 		    $file = new File();
-
+		  
 		    $file->setFileOwnerId(get_current_user_id());
-		    $file->setFileName('test.jpg');
+		    $file->setFileName( md5_file( $movefile['file'] ) );
+		    $file->setFileLabel( $_FILES['file']['name'] );
 		    $file->setFileType( $movefile['type'] );
 		    $file->setFileDescription('');
 		    $file->setFileSharingType('private');
@@ -69,10 +70,17 @@ final class Api {
 	public function list() {
 		global $wpdb;
 		
-		$stmt = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}frontend_file_manager WHERE file_owner_id = %d" , get_current_user_id());
+		$stmt = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}frontend_file_manager WHERE file_owner_id = %d ORDER BY id DESC" , get_current_user_id());
 		
 		$results = $wpdb->get_results( $stmt, OBJECT );
-
+		$files = array();
+		if ( ! empty ( $results ) ) {
+			foreach( $results as $result ) {
+				$result->date_updated = sprintf( _x( '%s ago', '%s = human-readable time difference', 'front-end-file-manager' ), 
+					human_time_diff( strtotime( $result->date_updated  ), current_time( 'timestamp' ) ) );
+				$files[] = $result;
+			}
+		}
 		$response = array();
 
 		if ( empty ( $results ) ) {
@@ -82,7 +90,7 @@ final class Api {
 		} else {
 			$response = array(
 				'message' => 'success',
-				'files' => $results
+				'files' => $files
 			);
 		}
 
