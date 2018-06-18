@@ -12,6 +12,7 @@ class FileCrud {
 			array(
 				'file_owner_id' => $file->getFileOwnerId(),
 				'file_name' => $file->getFileName(),
+				'file_label' => $file->getFileLabel(),
 				'file_type' => $file->getFileType(),
 				'file_description' => $file->getFileDescription(),
 				'file_sharing_type' => $file->getFileSharingType(),
