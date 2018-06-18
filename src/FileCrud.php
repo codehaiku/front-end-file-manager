@@ -7,9 +7,6 @@ class FileCrud {
 		
 		global $wpdb;
 
-		print_r($file);
-		print_r('saving..');
-
 		$wpdb->insert(
 			$wpdb->prefix . 'frontend_file_manager',
 			array(

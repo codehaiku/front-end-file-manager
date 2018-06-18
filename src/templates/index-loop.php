@@ -1,5 +1,16 @@
 <div id="fefm-wrap">
-	<ul id="fefm-wrap-ul"></ul>
+	<ul id="fefm-controls">
+		<li><a href="#"><input placeholder="Search files" type="search"></a></li>
+		<li><a href="#">New Folder</a></li>
+		<li><a href="#">Upload files to "Current Directory"</a></li>
+	</ul>
+	<ul id="fefm-navigation">
+		<li>
+			/<img width="24" src="<?php echo plugins_url();?>/front-end-file-manager/public/images/file-type-icons/folder-open.svg">
+		</li>
+	</ul>
+	<ul id="fefm-wrap-ul">
+	</ul>
 </div>
 
 <ul id="filelist"></ul>
