@@ -11,6 +11,7 @@ class Shortcode {
 	}
 
 	public function frontend_file_manager() {
+		wp_enqueue_style('frontend-filemanager-style');
 		wp_enqueue_script('frontend-filemanager');
 		require trailingslashit( FEFM_DIR ) . 'src/templates/index-loop.php';
 
