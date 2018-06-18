@@ -42,7 +42,7 @@ final class Api {
 		    
 		    $file = new File();
 
-		    $file->setFileOwnerId(1);
+		    $file->setFileOwnerId(get_current_user_id());
 		    $file->setFileName('test.jpg');
 		    $file->setFileType( $movefile['type'] );
 		    $file->setFileDescription('');
@@ -67,14 +67,26 @@ final class Api {
 	}
 
 	public function list() {
-		$data = array(
-				array(
-						'ud' => 1,
-						'file_name' => 'shit.jpg',
-						'file_description' => 'tae'
-					)
+		global $wpdb;
+		
+		$stmt = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}frontend_file_manager WHERE file_owner_id = %d" , get_current_user_id());
+		
+		$results = $wpdb->get_results( $stmt, OBJECT );
+
+		$response = array();
+
+		if ( empty ( $results ) ) {
+			$response = array(
+					'message' => 'error_unauthorized'
+				);
+		} else {
+			$response = array(
+				'message' => 'success',
+				'files' => $results
 			);
-		return new \WP_REST_Response($data);
+		}
+
+		return new \WP_REST_Response($response);
 	}
 
 	public function set_upload_dir( $dirs ) {
