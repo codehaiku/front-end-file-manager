@@ -7,6 +7,8 @@ class File {
 
 	protected $file_name;
 
+    protected $file_label;
+
 	protected $file_type;
 
 	protected $file_description;
@@ -157,6 +159,26 @@ class File {
     public function setDateCreated($date_created)
     {
         $this->date_created = $date_created;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFileLabel()
+    {
+        return $this->file_label;
+    }
+
+    /**
+     * @param mixed $file_label
+     *
+     * @return self
+     */
+    public function setFileLabel($file_label)
+    {
+        $this->file_label = $file_label;
 
         return $this;
     }
