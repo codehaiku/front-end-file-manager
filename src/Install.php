@@ -31,7 +31,7 @@ function fontend_file_manager_update_db_check() {
 	return;
 }
 
-$fontend_file_manager_db_version = '0.0.4';
+$fontend_file_manager_db_version = '0.0.5';
 
 /**
  * Actually installs the tables needed.
@@ -55,6 +55,7 @@ function fontend_file_manager_install() {
 			id 	mediumint(9) NOT NULL AUTO_INCREMENT,
 			file_owner_id mediumint(9),
 			file_name varchar(255),
+			file_label varchar(255),
 			file_type varchar(25),
 			file_description text,
 			file_sharing_type varchar(255),
