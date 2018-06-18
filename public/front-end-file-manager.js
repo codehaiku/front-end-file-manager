@@ -2,16 +2,13 @@ jQuery(document).ready(function($){
 
 	// Create Model
 	var FileModel = Backbone.Model.extend({
-		idAttribute: "_id"
+		idAttribute: "id"
 	});
 	window.fileModel = new FileModel;
 
 	// Create the collection
 	var FileCollection = Backbone.Collection.extend({
-	  	model: fileModel,
-	  	modelId: function(attrs) {
-	  		return attrs.id;
-	  	}
+	  	model: FileModel
 	});
 	window.fileCollection = new FileCollection;
 	fileCollection.on('add', function(file){
@@ -24,10 +21,25 @@ jQuery(document).ready(function($){
 		model: fileModel,
 		template: _.template($('#fefm-single-file-template').html()),
 		el: '#fefm-wrap-ul',
-		initialize: function() {
-			this.listenTo(this.collection, "add", this.render);
+		events: {
+			"click .fefm-item-file-trash": "trash"
 		},
-		render: function(file){
+		initialize: function() {
+			this.listenTo(this.collection, "add", this.add);
+			this.listenTo(this.collection, "remove", this.remove);
+		},
+		trash: function(e) {
+			e.preventDefault();
+			var element = $(e.target);
+			var file_id = element.attr('data-file-id');
+			// Delete in collection
+			console.log(this.collection.get(parseInt(file_id)))
+			this.collection.remove(this.collection.get(file_id));
+		},
+		remove: function(file) {
+			this.render();
+		},
+		add: function(file){
 			window.counter++;
 			if ( counter % 2 == 0 ) {
 				file.attributes.file_icon = frontend_filemanager.asset_uri + "file-type-icons/file-word.svg";
@@ -35,6 +47,16 @@ jQuery(document).ready(function($){
 				file.attributes.file_icon = frontend_filemanager.asset_uri + "file-type-icons/file-archive.svg";
 			}
 			this.$el.append(this.template(file.attributes));
+		},
+		render: function() {
+			var files = this.collection.models;
+			var that = this;
+			if ( files  ) {
+				this.$el.html('');
+				$.each(files, function(index, file){
+					that.$el.append(that.template(file.attributes));
+				});
+			}
 		}
 	}); 
 	window.fileView = new FileView;
@@ -49,9 +71,10 @@ jQuery(document).ready(function($){
 			$.each(response.files, function(index, file){
 				var __file = new FileModel;
 					__file.set({
-						_id: file.id,
+						id: file.id,
 						file_owner_id: file.file_owner_id,
 						file_name: file.file_name,
+						file_label: file.file_label,
 						file_type: file.file_type,
 						file_description: file.file_description,
 						file_sharing_type: file.file_sharing_type,
