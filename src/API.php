@@ -99,7 +99,21 @@ final class Api {
 
 		    $file_crud = new FileCrud( $file );
 
-		    $file_crud->save($file);
+		    $inserted = $file_crud->save($file);
+
+		    if ( $inserted ) {
+
+		    	$file = $file_crud->fetch( $inserted ); // The var $inserted contains the last inserted id.
+		    	
+		    	if ( ! empty ( $file ) ) {
+		    		$file->date_updated = sprintf( _x( '%s ago', '%s = human-readable time difference', 'front-end-file-manager' ), 
+					human_time_diff( strtotime( $file->date_updated  ), current_time( 'timestamp' ) ) );
+		    		$data['file'] = $file;
+		    	} else {
+		    		$data['file'] = null;
+		    	}
+
+		    }
 
 		} else {
 		    /**
@@ -116,7 +130,7 @@ final class Api {
 	public function list() {
 		global $wpdb;
 		
-		$stmt = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}frontend_file_manager WHERE file_owner_id = %d ORDER BY id DESC" , get_current_user_id());
+		$stmt = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}frontend_file_manager WHERE file_owner_id = %d ORDER BY id ASC" , get_current_user_id());
 		
 		$results = $wpdb->get_results( $stmt, OBJECT );
 		$files = array();
