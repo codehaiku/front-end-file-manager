@@ -1,6 +1,6 @@
 <div id="fefm-wrap">
 	<ul id="fefm-controls">
-		<li><a class="fefm-controls-btn" href="#">Upload</a></li>
+		<li><a class="fefm-controls-btn" id="fefm-controls-btn-uploaded" href="#">Upload</a></li>
 		<li><a class="fefm-controls-btn-link" href="#">New Folder</a></li>
 	</ul>
 	<ul id="fefm-navigation">
@@ -16,7 +16,6 @@
 <br />
  
 <div id="container">
-    <a id="browse" href="javascript:;">[Browse...]</a>
     <a id="start-upload" href="javascript:;">[Start Upload]</a>
 </div>
 
@@ -33,9 +32,16 @@
 		<div class="file-item-column file-date-updated"><%=date_updated%></div>
 		<div class="file-item-column file-sharing-type"><%=file_sharing_type%></div>
 		<div class="file-item-column file-actions">
-			<a href="#">Edit</a>
-			<a data-file-id="<%=id%>" class="fefm-item-file-trash" href="#">Trash</a></div>
-			<a href="#">Copy</a>
+			<a href="#" class="file-item-column-file-actions-dropdown">
+				<span class="fefm-action-label">Select Actions</span>
+			</a>
+			<ul class="file-item-column-file-actions-dropdown-ul inactive">
+				<li><a href="#">Edit</a></li>
+				<li><a data-file-id="<%=id%>" class="fefm-item-file-trash" href="#">Trash</a></li>
+				<li><a href="#">Share</a></li>
+				<li><a href="#">Copy</a></li>
+				<li><a class="fefm-toolbar-close" href="#">Close Toolbar</a></li>
+			</ul>
 		</div>
 	</li>
 </script>
