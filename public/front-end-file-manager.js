@@ -87,6 +87,7 @@ jQuery(document).ready(function($){
 			}
 			
 			this.$el.prepend(this.template(file.attributes));
+
 		},
 		render: function() {
 			var files = this.collection.models;
@@ -139,6 +140,7 @@ jQuery(document).ready(function($){
 			
 		}
 	});
+
 	new FrontEndFileManagerRoute();
 	Backbone.history.start();
 
@@ -156,22 +158,28 @@ jQuery(document).ready(function($){
 	uploader.init();
 
 	uploader.bind('FilesAdded', function(up, files) {
+		
 		var html = '';
+  		
   		plupload.each(files, function(file) {
     		html += '<li id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></li>';
   		});
-  		document.getElementById('filelist').innerHTML += html;
+  		
+  		document.getElementById('fefm-uploader-file-list').innerHTML += html;
+  		
   		uploader.start();
+
   	});
 
   	uploader.bind('UploadProgress', function(up, file) {
   		document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
 	});
 
-  	uploader.bind('FileUploaded', function(up, file, result){
+  	uploader.bind('FileUploaded', function(up, f, result){
   		var response = JSON.parse(result.response);
 
 		var __file = new FileModel;
+
 			__file.set({
 				id: response.file.id,
 				file_owner_id: response.file.file_owner_id,
@@ -182,8 +190,15 @@ jQuery(document).ready(function($){
 				file_sharing_type: response.file.file_sharing_type,
 				date_updated: response.file.date_updated,
 				date_created: response.file.date_created
-			})
+			});
+
 		fileCollection.add(__file);
+
+		setTimeout(function(){
+			$( '#'+f.id ).remove();
+		}, 2000);
+
+
   	});
 
 
