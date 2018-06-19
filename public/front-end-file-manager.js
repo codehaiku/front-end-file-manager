@@ -32,9 +32,21 @@ jQuery(document).ready(function($){
 			e.preventDefault();
 			var element = $(e.target);
 			var file_id = element.attr('data-file-id');
+			var file = this.collection.get(file_id);
+			file.destroy({
+				url: frontend_filemanager.rest_url + 'delete/' + file_id,
+				headers: {
+					'X-WP-Nonce': frontend_filemanager.nonce
+				},
+				success: function() {
+					console.log('delete ok.')
+				}
+			});
+			return;
 			// Delete in collection
 			console.log(this.collection.get(parseInt(file_id)))
 			this.collection.remove(this.collection.get(file_id));
+
 		},
 		remove: function(file) {
 			this.render();
