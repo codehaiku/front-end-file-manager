@@ -5,13 +5,12 @@
 		<li><a class="fefm-controls-btn fefm-controls-btn-link" href="#">New Folder</a></li>
 	</ul>
 
-	<ul id="filelist"></ul>
+	<ul id="fefm-uploader-file-list"></ul>
 
 	<ul id="fefm-navigation">
 		<li>
 			<img width="24" src="<?php echo plugins_url();?>/front-end-file-manager/public/images/file-type-icons/folder-open.svg">
 		</li>
-		<li>Found 12 files in root folder</li>
 	</ul>
 	<ul id="fefm-wrap-ul">
 	</ul>
