@@ -142,6 +142,7 @@ jQuery(document).ready(function($){
 	});
 
 	new FrontEndFileManagerRoute();
+	
 	Backbone.history.start();
 
 	// == Uploader PLUPLOAD

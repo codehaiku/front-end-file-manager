@@ -17,7 +17,7 @@
 </div>
 
 <script id="fefm-single-file-template" type="text/template">
-	<li class="file-item">
+	<li class="file-item" id="fefm-file-<%=id%>">
 		<div class="file-item-column file-thumb">
 			<img width="24" src="<%=file_icon%>" />
 		</div>
