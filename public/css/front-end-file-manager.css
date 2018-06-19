@@ -41,8 +41,6 @@ ul#fefm-navigation{
 }
 
 #fefm-wrap > ul{
-    max-height: 450px;
-    overflow: scroll;
 }
 #fefm-wrap li.file-item {
     padding: 15px 10px;
