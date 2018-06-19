@@ -125,9 +125,27 @@ jQuery(document).ready(function($){
 			});
 		}
 	});
+	
+	// Routers
+	var FrontEndFileManagerRoute = Backbone.Router.extend({
+		routes: {
+			"file/:id": "single",
+			"/": "single"
+		},
+		single: function () {
+			$('#fefm-wrap').css('display', 'none');
+		},
+		initialize: function() {
+			
+		}
+	});
+	new FrontEndFileManagerRoute();
+	Backbone.history.start();
+
 	// == Uploader PLUPLOAD
 	var uploader = new plupload.Uploader({
 	  	browse_button: 'fefm-controls-btn-uploaded', 
+	  	drop_element: 'fefm-wrap-ul',
 	  	url: frontend_filemanager.rest_url + 'upload',
 	  	unique_names: true,
 		headers: {
@@ -143,6 +161,7 @@ jQuery(document).ready(function($){
     		html += '<li id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></li>';
   		});
   		document.getElementById('filelist').innerHTML += html;
+  		uploader.start();
   	});
 
   	uploader.bind('UploadProgress', function(up, file) {
@@ -166,11 +185,6 @@ jQuery(document).ready(function($){
 			})
 		fileCollection.add(__file);
   	});
-
-  	document.getElementById('start-upload').onclick = function() {
-  		uploader.start();
-	};
-
 
 
 });

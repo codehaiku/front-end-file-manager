@@ -41,6 +41,8 @@ ul#fefm-navigation{
 }
 
 #fefm-wrap > ul{
+    max-height: 450px;
+    overflow: scroll;
 }
 #fefm-wrap li.file-item {
     padding: 15px 10px;
@@ -48,6 +50,10 @@ ul#fefm-navigation{
     align-items: center;
     background: #fff;
     position: relative;
+    font-size: 14px;
+}
+#fefm-wrap li.file-item:hover{
+    box-shadow: inset 1px 0px 0px 1px #673ab721;
 }
 #fefm-wrap li.file-item:nth-child(even) {
 	background: #f9f9f9;
@@ -66,7 +72,7 @@ ul#fefm-navigation{
 #fefm-wrap li.file-item .file-item-column.file-label { flex-basis: 40%;}
 #fefm-wrap li.file-item .file-item-column.file-actions { flex-basis: 12%;}/*@todo make this 5%*/
 #fefm-wrap li.file-item .file-item-column.file-sharing-type { flex-basis: 10%;}
-
+#fefm-wrap li.file-item .file-item-column.file-label a {color: inherit;}
 .file-item-column-file-actions-dropdown{
     display: block;
     border: 1px solid #ddd;
@@ -105,6 +111,7 @@ ul.file-item-column-file-actions-dropdown-ul > li {
 ul.file-item-column-file-actions-dropdown-ul > li > a {
 padding: 2.5px 15px;
     display: block;
+    color: #212121;
     font-size: smaller;
 }
 
