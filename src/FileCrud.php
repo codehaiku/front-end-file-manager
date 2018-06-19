@@ -3,11 +3,25 @@ namespace FrontendFileManager\Src\File;
 
 class FileCrud {
 
+	public function fetch ( $file_id ) {
+
+		global $wpdb;
+		
+		require_once FEFM_DIR . '/src/Helpers.php';
+
+		$table_name = Helpers::get_table_name();
+		
+		$stmt = $wpdb->prepare("SELECT * FROM {$table_name} WHERE id = %d", $file_id);
+
+		return $wpdb->get_row($stmt, OBJECT);
+
+	}
+
 	public function save( File $file ){
 		
 		global $wpdb;
 
-		$wpdb->insert(
+		$inserted = $wpdb->insert(
 			$wpdb->prefix . 'frontend_file_manager',
 			array(
 				'file_owner_id' => $file->getFileOwnerId(),
@@ -29,5 +43,10 @@ class FileCrud {
 				'%s',
 			)
 		);
+
+		if ( $inserted ) {
+			return $wpdb->insert_id;
+		}
+		return false;
 	}
 }
