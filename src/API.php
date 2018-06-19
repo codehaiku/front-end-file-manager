@@ -49,9 +49,8 @@ final class Api {
 			if ( false !== $deleted  ) {
 				$status = 200;
 				$response['message'] = 'delete okay.';
-
 				// delete the actual file.
-				//wp_delete_file(Helpers::get_file_path($file_id));
+				wp_delete_file( $file_available );
 			} 
 		} else {
 			$response['message'] = 'user not authenticated.';
