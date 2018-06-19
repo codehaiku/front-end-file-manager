@@ -25,7 +25,11 @@
 		<div class="file-item-column file-thumb">
 			<img width="24" src="<%=file_icon%>" />
 		</div>
-		<div class="file-item-column file-label"><%=file_label%></div>
+		<div class="file-item-column file-label">
+			<a href="#file/<%=id%>" title="<%=file_label%>">
+				<%=file_label%>
+			</a>
+		</div>
 		<div class="file-item-column file-date-updated"><%=date_updated%></div>
 		<div class="file-item-column file-sharing-type"><%=file_sharing_type%></div>
 		<div class="file-item-column file-actions">
