@@ -4,7 +4,14 @@ namespace FrontendFileManager\Src\File;
 final class Api {
 
 	public function __construct() {
-		
+			
+		add_action( 'rest_api_init', function () {
+		  register_rest_route( 'frontend-filemanager/v1', '/file/(?P<id>\d+)', array(
+		    'methods' => 'GET',
+		    'callback' => array( $this, 'single' ),
+		  ));
+		});
+			
 		add_action( 'rest_api_init', function () {
 		  register_rest_route( 'frontend-filemanager/v1', '/delete/(?P<id>\d+)', array(
 		    'methods' => 'DELETE',
@@ -15,7 +22,7 @@ final class Api {
 		add_action( 'rest_api_init', function () {
 		  register_rest_route( 'frontend-filemanager/v1', '/list', array(
 		    'methods' => 'GET',
-		    'callback' => array( $this, 'list' ),
+		    'callback' => array( $this, 'list_files' ),
 		  ));
 		});
 
@@ -26,6 +33,34 @@ final class Api {
 		    'callback' => array( $this, 'upload' ),
 		  ));
 		});
+	}
+
+	public function single( $http_request ) {
+		
+		global $wpdb;
+
+		$response = array();
+		$status = 400;
+
+		$params = $http_request->get_params();
+		$file_id = $params['id'];
+
+		require_once FEFM_DIR . '/src/Helpers.php';
+
+		$stmt = $wpdb->prepare( "SELECT * FROM " . Helpers::get_table_name() . " WHERE id = %d", $file_id );
+
+		$result = $wpdb->get_row( $stmt, OBJECT );
+ 
+		if ( ! empty( $result ) ):
+
+			$status = 200;
+
+			$response = array('file' => $result);
+
+		endif;
+		
+
+		return new \WP_REST_Response($response, $status);
 	}
 
 	public function delete( $http_request ) {
@@ -127,7 +162,8 @@ final class Api {
 
 	}
 
-	public function list() {
+	public function list_files() {
+
 		global $wpdb;
 		
 		$stmt = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}frontend_file_manager WHERE file_owner_id = %d ORDER BY id ASC" , get_current_user_id());
