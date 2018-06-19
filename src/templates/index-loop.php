@@ -15,7 +15,11 @@
 	<ul id="fefm-wrap-ul">
 	</ul>
 </div>
+<div id="fefm-single-view-wrap"></div>
 
+<script id="fefm-single-view" type="text/template">
+	<?php include_once trailingslashit( FEFM_DIR ) . 'src/templates/single-view.php'; ?>
+</script>
 <script id="fefm-single-file-template" type="text/template">
 	<li class="file-item" id="fefm-file-<%=id%>">
 		<div class="file-item-column file-thumb">
