@@ -36,7 +36,7 @@ final class Helpers {
 
 		if ( ! empty ( $result ) ) {
 
-			$file_path = self::get_user_upload_dir() . $result->file_name;
+			echo $file_path = self::get_user_upload_dir() . $result->file_name;
 
 			if ( file_exists( $file_path ) ) {
 				return $file_path;
