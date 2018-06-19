@@ -21,11 +21,39 @@ jQuery(document).ready(function($){
 		template: _.template($('#fefm-single-file-template').html()),
 		el: '#fefm-wrap-ul',
 		events: {
-			"click .fefm-item-file-trash": "trash"
+			"click .fefm-item-file-trash": "trash",
+			"click .file-item-column-file-actions-dropdown": "toggle_action_menu",
+			"click .fefm-toolbar-close": 'close_toolbar'
 		},
 		initialize: function() {
 			this.listenTo(this.collection, "add", this.add);
 			this.listenTo(this.collection, "remove", this.remove);
+		},
+		close_toolbar: function(e) {
+			e.preventDefault();
+			var dropdown = $(e.target).parent().parent();
+			dropdown.removeClass('active').addClass('inactive');
+		},
+		toggle_action_menu: function(e){
+
+			e.preventDefault();
+
+			var activeDropdown = $( e.target).parent().find('.file-item-column-file-actions-dropdown-ul');
+
+			$.each( $('.file-item-column-file-actions-dropdown-ul'), function(){
+				if ( ! $(this).is( activeDropdown ) ) {
+					$(this).removeClass('active').addClass('inactive');
+				}
+			});
+
+			if ( activeDropdown.hasClass('inactive') ) {
+				activeDropdown.removeClass('inactive').addClass('active');
+			} else {
+				activeDropdown.addClass('inactive').removeClass('active');
+			}
+
+			return;
+
 		},
 		trash: function(e) {
 			e.preventDefault();
@@ -99,7 +127,7 @@ jQuery(document).ready(function($){
 	});
 	// == Uploader PLUPLOAD
 	var uploader = new plupload.Uploader({
-	  	browse_button: 'browse', 
+	  	browse_button: 'fefm-controls-btn-uploaded', 
 	  	url: frontend_filemanager.rest_url + 'upload',
 	  	unique_names: true,
 		headers: {
@@ -142,5 +170,7 @@ jQuery(document).ready(function($){
   	document.getElementById('start-upload').onclick = function() {
   		uploader.start();
 	};
+
+
 
 });
