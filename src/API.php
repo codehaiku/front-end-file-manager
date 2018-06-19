@@ -5,7 +5,13 @@ final class Api {
 
 	public function __construct() {
 		
-		
+		add_action( 'rest_api_init', function () {
+		  register_rest_route( 'frontend-filemanager/v1', '/delete/(?P<id>\d+)', array(
+		    'methods' => 'DELETE',
+		    'callback' => array( $this, 'delete' ),
+		  ));
+		});
+
 		add_action( 'rest_api_init', function () {
 		  register_rest_route( 'frontend-filemanager/v1', '/list', array(
 		    'methods' => 'GET',
@@ -22,11 +28,44 @@ final class Api {
 		});
 	}
 
+	public function delete( $http_request ) {
+		
+		global $wpdb;
+		
+		$params = $http_request->get_params();
+		$file_id = $params['id'];
+		$response = array( 'message' => 'not okay.' );
+		$status = 400;
+		
+		require_once FEFM_DIR . '/src/Helpers.php';
+
+		// First, fetch the file.
+		$file_available = Helpers::get_user_file_path($file_id);
+
+		if ( $file_available ) {
+
+			$deleted = $wpdb->delete( Helpers::get_table_name(), array( 'id' => $file_id ), array( '%d' ) );
+			
+			if ( false !== $deleted  ) {
+				$status = 200;
+				$response['message'] = 'delete okay.';
+
+				// delete the actual file.
+				//wp_delete_file(Helpers::get_file_path($file_id));
+			} 
+		} else {
+			$response['message'] = 'user not authenticated.';
+		}
+
+		return new \WP_REST_Response($response, $status);
+	}
+
 	public function upload() {
 		
 		$data = array();
 
 		add_filter( 'upload_dir', array( $this, 'set_upload_dir' ) );
+		add_filter( 'wp_handle_upload_prefilter', array( $this, 'change_file_name_on_upload' ) );
 
 		if ( ! function_exists( 'wp_handle_upload' ) ) {
 			require_once( ABSPATH . 'wp-admin/includes/file.php' );
@@ -41,14 +80,22 @@ final class Api {
 		if ( $movefile && ! isset( $movefile['error'] ) ) {
 		    
 		    $file = new File();
-		  
-		    $file->setFileOwnerId(get_current_user_id());
-		    $file->setFileName( md5_file( $movefile['file'] ) );
+		  	
+		  	// Set the ownder id.
+		    $file->setFileOwnerId( get_current_user_id() );
+		    // Set the file name.
+		    $file->setFileName( wp_basename( $movefile['file'] ) );
+		    // Set the file label.
 		    $file->setFileLabel( $_FILES['file']['name'] );
+		    // Set the file type.
 		    $file->setFileType( $movefile['type'] );
+		    // Set the file description.
 		    $file->setFileDescription('');
+		    // Set the sharing type.
 		    $file->setFileSharingType('private');
+		    // Set date updated.
 		    $file->setDateUpdated( current_time('mysql', 1) );
+		    // Set date created.
 		    $file->setDateCreated( current_time('mysql', 1) );
 
 		    $file_crud = new FileCrud( $file );
@@ -112,9 +159,19 @@ final class Api {
 
 	}
 
+	public function change_file_name_on_upload( $file ){
+
+		$ext = pathinfo( $file['name'], PATHINFO_EXTENSION );
+		$file['name'] = sha1_file($file['tmp_name']).'.'.$ext;
+
+		return $file;
+	}
+
 	public function __destruct() {
 		
 		remove_filter( 'upload_dir', array( $this, 'set_upload_dir' ) );
+
+		remove_filter( 'wp_handle_upload_prefilter', array( $this, 'change_file_name_on_upload' ) );
 
 	}
 
