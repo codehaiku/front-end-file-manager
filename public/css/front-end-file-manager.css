@@ -120,3 +120,25 @@ padding: 2.5px 15px;
     color: #F44336;
     border-top: 1px solid #ddd;
 }
+
+#fefm-wrap {position: relative;}
+
+ul#fefm-uploader-file-list {
+    z-index: 20;
+    background: #fff;
+    top: 0;
+    padding: 0 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+ul#fefm-uploader-file-list:empty { display: none; }
+
+ul#fefm-uploader-file-list li {
+    font-size: 14px;
+    padding: 5px 10px;
+    background: #ffffff;
+    margin: 0 -20px;
+    border: 1px solid #eee;
+    margin-bottom: -1px;
+}
