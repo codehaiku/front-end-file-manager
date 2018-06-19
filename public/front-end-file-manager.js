@@ -2,7 +2,18 @@ jQuery(document).ready(function($){
 
 	// Create Model
 	var FileModel = Backbone.Model.extend({
-		idAttribute: "id"
+		idAttribute: "id",
+		defaults: {
+			id: 0,
+			file_label: "",
+			file_name: "",
+			file_type: "",
+			file_owner_id: 0,
+			file_description: "",
+			file_sharing_type: "",
+			date_updated: "",
+			date_created: ""
+		}
 	});
 	window.fileModel = new FileModel;
 
@@ -89,6 +100,33 @@ jQuery(document).ready(function($){
 			this.$el.prepend(this.template(file.attributes));
 
 		},
+		list_files: function(){
+			// Sync the file
+			
+			Backbone.sync('read', fileModel, {
+				url: frontend_filemanager.rest_url + 'list',
+				headers: {
+					'X-WP-Nonce': frontend_filemanager.nonce
+				},
+				success: function(response){
+					$.each(response.files, function(index, file){
+						var __file = new FileModel;
+							__file.set({
+								id: file.id,
+								file_owner_id: file.file_owner_id,
+								file_name: file.file_name,
+								file_label: file.file_label,
+								file_type: file.file_type,
+								file_description: file.file_description,
+								file_sharing_type: file.file_sharing_type,
+								date_updated: file.date_updated,
+								date_created: file.date_created
+							})
+						fileCollection.add(__file);
+					});
+				}
+			});
+		},
 		render: function() {
 			var files = this.collection.models;
 			var that = this;
@@ -102,42 +140,47 @@ jQuery(document).ready(function($){
 	}); 
 	window.fileView = new FileView;
 
-	// Sync the file
-	Backbone.sync('read', fileModel, {
-		url: frontend_filemanager.rest_url + 'list',
-		headers: {
-			'X-WP-Nonce': frontend_filemanager.nonce
-		},
-		success: function(response){
-			$.each(response.files, function(index, file){
-				var __file = new FileModel;
-					__file.set({
-						id: file.id,
-						file_owner_id: file.file_owner_id,
-						file_name: file.file_name,
-						file_label: file.file_label,
-						file_type: file.file_type,
-						file_description: file.file_description,
-						file_sharing_type: file.file_sharing_type,
-						date_updated: file.date_updated,
-						date_created: file.date_created
-					})
-				fileCollection.add(__file);
+	var FrontEndFileManagerView__Single = Backbone.View.extend({
+		template: _.template($('#fefm-single-view').html()),
+		el: '#fefm-single-view-wrap',
+		model: fileModel,
+		render: function(file_id) {
+			var that = this;
+			
+			this.$el.html( that.template( this.model.defaults ) );
+
+			Backbone.sync('read', this.model, {
+				url: frontend_filemanager.rest_url + 'file/' + file_id,
+				success: function(response) {
+					that.model.set(response.file);
+					that.$el.html( that.template( that.model.attributes ) );
+				}	
 			});
+			
 		}
 	});
+	window.frontEndFileManagerView__Single = new FrontEndFileManagerView__Single;
 	
 	// Routers
 	var FrontEndFileManagerRoute = Backbone.Router.extend({
 		routes: {
 			"file/:id": "single",
-			"/": "single"
+			"list": "list"
 		},
-		single: function () {
+		single: function (id) {
 			$('#fefm-wrap').css('display', 'none');
+			$('#fefm-single-view-wrap').css('display', 'block');
+			frontEndFileManagerView__Single.render(id);
+		},
+		list: function() {
+			
+			$('#fefm-wrap').css('display', 'block');
+			$('#fefm-single-view-wrap').css('display', 'none');
+
+			fileView.list_files();
 		},
 		initialize: function() {
-			
+			fileView.list_files();
 		}
 	});
 
