@@ -1,4 +1,4 @@
-#fefm-wrap ul, #fefm-wrap li {
+#fefm-wrap > ul, #fefm-wrap > ul > li {
 	padding: 0;
 	margin: 0;
 	list-style: none;
@@ -40,15 +40,14 @@ ul#fefm-navigation{
     border: 1px solid #ddd;
 }
 
-#fefm-wrap ul{
-	max-height: 450px;
-    overflow: scroll;
+#fefm-wrap > ul{
 }
 #fefm-wrap li.file-item {
     padding: 15px 10px;
     display: flex;
     align-items: center;
     background: #fff;
+    position: relative;
 }
 #fefm-wrap li.file-item:nth-child(even) {
 	background: #f9f9f9;
@@ -65,5 +64,52 @@ ul#fefm-navigation{
 }
 
 #fefm-wrap li.file-item .file-item-column.file-label { flex-basis: 40%;}
-#fefm-wrap li.file-item .file-item-column.file-actions { flex-basis: 5%;}
+#fefm-wrap li.file-item .file-item-column.file-actions { flex-basis: 12%;}/*@todo make this 5%*/
 #fefm-wrap li.file-item .file-item-column.file-sharing-type { flex-basis: 10%;}
+
+.file-item-column-file-actions-dropdown{
+    display: block;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-image: url(../images/file-type-icons/ellipsis-h.svg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    text-indent: -9999px;
+    background-size: 12px;
+    width: 30px;
+    float: right;
+}
+
+ul.file-item-column-file-actions-dropdown-ul {
+    position: absolute;
+    top: 45px;
+    right: 45px;
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0px 1px 4px #ddd;
+    padding: 0;
+    z-index: 20;
+    display: none;
+    width: 135px;
+}
+ul.file-item-column-file-actions-dropdown-ul.active {
+    display: block;
+}
+
+ul.file-item-column-file-actions-dropdown-ul > li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul.file-item-column-file-actions-dropdown-ul > li > a {
+padding: 2.5px 15px;
+    display: block;
+    font-size: smaller;
+}
+
+.fefm-toolbar-close {
+    background: #fbfbfb;
+    color: #F44336;
+    border-top: 1px solid #ddd;
+}
