@@ -30,8 +30,8 @@ ul#fefm-controls li {
 }
 ul#fefm-wrap-ul {
 	border: 1px solid #ddd;
+    margin-bottom: 25px;
 }
-
 ul#fefm-navigation{
 	background: #eee;
     padding: 5px 10px;
@@ -39,7 +39,6 @@ ul#fefm-navigation{
     position: relative;
     border: 1px solid #ddd;
 }
-
 #fefm-wrap > ul{
 }
 #fefm-wrap li.file-item {
@@ -139,4 +138,46 @@ ul#fefm-uploader-file-list li {
     margin: 0 -20px;
     border: 1px solid #eee;
     margin-bottom: -1px;
+}
+
+/**
+ * Pagination
+ */
+div#fefm-pagination-inner-wrap ul#fefm-paging-ul{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+div#fefm-pagination-inner-wrap ul#fefm-paging-ul li{
+    list-style: none;
+    flex-basis: 30px;
+    text-align: center;
+    margin-right: 10px;
+    position: relative;
+}
+div#fefm-pagination-inner-wrap ul#fefm-paging-ul li > a {
+    border-radius: 7px;
+    background: #fff;
+    width: 100%;
+    display: block;
+    color: #777;
+    font-size: 12px;
+    border: 2px solid #dcdcdc;
+    position: relative;
+    line-height: 2;
+}
+
+div#fefm-pagination-inner-wrap ul#fefm-paging-ul li:hover > a,
+div#fefm-pagination-inner-wrap ul#fefm-paging-ul li.active > a {
+    color: #512DA8;
+    border-color: #512DA8;
+    font-weight: bold;
+}
+
+div#fefm-pagination-inner-wrap ul#fefm-paging-ul li:hover > a.disabled,
+div#fefm-pagination-inner-wrap ul#fefm-paging-ul li > a.disabled {
+    border-color: #dcdcdc;
+    color: #dcdcdc;
+    cursor: not-allowed;
 }
