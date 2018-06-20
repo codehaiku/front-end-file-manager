@@ -219,13 +219,18 @@ jQuery(document).ready(function($){
 		single: function (id) {
 			$('#fefm-wrap').css('display', 'none');
 			$('#fefm-single-view-wrap').css('display', 'block');
+			$('#fefm-pagination-wrap').css('display', 'none');
 			frontEndFileManagerView__Single.render(id);
 		},
 		list: function(_page) {
 			
+			$('#fefm-pagination-wrap').css('display', 'block');
 			$('#fefm-wrap').css('display', 'block');
 			$('#fefm-single-view-wrap').css('display', 'none');
 
+			if ( ! _page ) {
+				_page = 1;
+			}
 			fileView.list_files({
 				page: _page
 			});
