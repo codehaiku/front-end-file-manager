@@ -1,4 +1,7 @@
 <li class="file-item" id="fefm-file-<%=id%>">
+	<div class="file-item-column file-check-selector">
+		<input type="checkbox" value="" />
+	</div>
 	<div class="file-item-column file-thumb">
 		<img width="48" src="<%=file_icon%>" />
 	</div>
