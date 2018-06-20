@@ -24,7 +24,6 @@ jQuery(document).ready(function($){
 
 	window.fileCollection = new FileCollection;
 
-	window.counter = 0;
 	// Create the View
 	var FileView = Backbone.View.extend({
 		collection: fileCollection,
@@ -89,19 +88,22 @@ jQuery(document).ready(function($){
 			this.render();
 		},
 		add: function(file){
-			window.counter++;
-			if ( counter % 2 == 0 ) {
-				file.attributes.file_icon = frontend_filemanager.asset_uri + "file-type-icons/file-word.svg";
-			} else {
-				file.attributes.file_icon = frontend_filemanager.asset_uri + "file-type-icons/file-archive.svg";
-			}
-			file.attributes.file_icon = "http://3.bp.blogspot.com/-rpXmPrCKU5g/Vfip8MNSJoI/AAAAAAAAiYo/HvuQoHwfY-0/s1600/word%2Bbg.png";
+			
+			var items=[
+				"https://image.flaticon.com/icons/svg/136/136521.svg",
+				"https://image.flaticon.com/icons/svg/136/136548.svg",
+				"https://image.flaticon.com/icons/svg/136/136557.svg",
+				"https://image.flaticon.com/icons/svg/136/136524.svg"
+			];
+
+			var item = items[Math.floor(Math.random()*items.length)];
+			file.attributes.file_icon = item;
 			
 			this.$el.prepend(this.template(file.attributes));
 
 		},
 		list_files: function(){
-
+			this.$el.html('');
 			// Sync the file
 			Backbone.sync('read', fileModel, {
 				url: frontend_filemanager.rest_url + 'list',
