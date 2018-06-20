@@ -51,7 +51,7 @@ ul#fefm-navigation{
     font-size: 14px;
 }
 #fefm-wrap li.file-item:hover{
-    box-shadow: inset 1px 0px 0px 1px #673ab721;
+    box-shadow: inset 1px 0px 0px 1px #673ab77a;
 }
 #fefm-wrap li.file-item:nth-child(even) {
 	background: #f9f9f9;
