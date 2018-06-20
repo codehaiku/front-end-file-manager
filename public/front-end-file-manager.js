@@ -24,6 +24,15 @@ jQuery(document).ready(function($){
 
 	window.fileCollection = new FileCollection;
 
+	// Pagination View
+	var FrontEndFileManagerPaging_View = Backbone.View.extend({
+		el: '#fefm-pagination-wrap',
+		template: _.template($('#fefm-pagination-template').html()),
+		render: function(settings){
+			this.$el.html( this.template( settings ) );
+		}
+	});
+	window.frontEndFileManagerPaging_View = new FrontEndFileManagerPaging_View;
 	// Create the View
 	var FileView = Backbone.View.extend({
 		collection: fileCollection,
@@ -87,7 +96,7 @@ jQuery(document).ready(function($){
 		remove: function(file) {
 			this.render();
 		},
-		add: function(file){
+		add: function(file, settings, options){
 			
 			var items=[
 				"https://image.flaticon.com/icons/svg/136/136521.svg",
@@ -97,22 +106,31 @@ jQuery(document).ready(function($){
 			];
 
 			var item = items[Math.floor(Math.random()*items.length)];
+
 			file.attributes.file_icon = item;
 			
-			this.$el.prepend(this.template(file.attributes));
+			if( options.fefm_method && options.fefm_method === 'prepend') {
+				this.$el.prepend(this.template(file.attributes));
+			} else {
+				this.$el.append(this.template(file.attributes));
+			}
 
 		},
-		list_files: function(){
-			this.$el.html('');
+		updatePagination: function(settings) {
+			window.frontEndFileManagerPaging_View.render(settings);
+		},
+		list_files: function(settings){
+			var that = this;
+			
 			// Sync the file
 			Backbone.sync('read', fileModel, {
-				url: frontend_filemanager.rest_url + 'list',
+				url: frontend_filemanager.rest_url + 'list/page/' + settings.page,
 				headers: {
 					'X-WP-Nonce': frontend_filemanager.nonce
 				},
 				success: function(response){
 					fileCollection.reset();
-					
+					that.$el.html('');
 					$.each(response.files, function(index, file){
 						var __file = new FileModel;
 							__file.set({
@@ -126,7 +144,12 @@ jQuery(document).ready(function($){
 								date_updated: file.date_updated,
 								date_created: file.date_created
 							})
-						fileCollection.add(__file, { merge: true });
+						fileCollection.add(__file);
+					});
+					// Update pagination.
+					that.updatePagination({
+						current_page: response.page,
+						num_pages: response.num_pages
 					});
 				}
 			});
@@ -190,6 +213,7 @@ jQuery(document).ready(function($){
 		routes: {
 			"file/:id": "single",
 			"list": "list",
+			"list/page/:page": "list",
 			"": "list",// Default.
 		},
 		single: function (id) {
@@ -197,12 +221,14 @@ jQuery(document).ready(function($){
 			$('#fefm-single-view-wrap').css('display', 'block');
 			frontEndFileManagerView__Single.render(id);
 		},
-		list: function() {
+		list: function(_page) {
 			
 			$('#fefm-wrap').css('display', 'block');
 			$('#fefm-single-view-wrap').css('display', 'none');
 
-			fileView.list_files();
+			fileView.list_files({
+				page: _page
+			});
 		},
 		initialize: function() {
 			Backbone.history.start();
@@ -259,7 +285,9 @@ jQuery(document).ready(function($){
 				date_created: response.file.date_created
 			});
 
-		fileCollection.add(__file);
+		fileCollection.add(__file, {
+			fefm_method: 'prepend'
+		});
 
 		setTimeout(function(){
 			$( '#'+f.id ).remove();
