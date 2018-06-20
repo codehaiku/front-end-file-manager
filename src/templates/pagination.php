@@ -27,6 +27,15 @@ function fefm_pagination(c, m) {
 %>
 	<% if ( num_pages >= 1 ) { %>
 		<ul id="fefm-paging-ul">
+			<% if ( current_page > 1 ) { %>
+				<li>
+					<a href="#list/page/<%= parseInt(current_page) - 1 %>">
+						<span class="previous">
+							<?php esc_html_e('&laquo; Previous', 'front-end-file-manager'); ?>
+						</span>
+					</a>
+				</li>
+			<% } %>
 			<% var paging = fefm_pagination(parseInt(current_page), num_pages) %>
 			<% for( var i = 0 ; i < paging.length; i++) { %>
 				<li class="<%= (current_page == paging[i]) ? 'active': 'inactive' %>">
@@ -39,6 +48,13 @@ function fefm_pagination(c, m) {
 							<%=paging[i]%>
 						</a>
 					<% }%>
+				</li>
+			<% } %>
+			<% if ( current_page < num_pages ) { %>
+				<li>
+					<a href="#list/page/<%= parseInt(current_page) + 1 %>">
+						<span class="next"><?php esc_html_e('Next &raquo;', 'front-end-file-manager'); ?></span>
+					</a>
 				</li>
 			<% } %>
 		</ul>
