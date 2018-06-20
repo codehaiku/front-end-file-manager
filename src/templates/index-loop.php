@@ -4,6 +4,7 @@
 		<li><a class="fefm-controls-btn fefm-controls-btn-link" href="#">New Folder</a></li>
 	</ul>
 
+	
 	<ul id="fefm-uploader-file-list"></ul>
 
 	<ul id="fefm-navigation">
@@ -11,6 +12,17 @@
 			<img width="24" src="<?php echo plugins_url();?>/front-end-file-manager/public/images/file-type-icons/folder-open.svg">
 		</li>
 	</ul>
+
+	<ul id="fefm-file-actions">
+		<li class="file-actions-check-selector">
+			<input type="checkbox" />
+		</li>
+		<li class="file-actions-check-title">Title</li>
+		<li class="file-actions-check-last-modified">Last Modified</li>
+		<li class="file-actions-check-sharing-type">Sharing Type</li>
+		<li class="file-actions-check-actions">Actions</li>
+	</ul>
+
 	<ul id="fefm-wrap-ul">
 	</ul>
 </div>
