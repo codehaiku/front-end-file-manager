@@ -20,14 +20,7 @@ final class Api {
 		});
 			
 		add_action( 'rest_api_init', function () {
-		  register_rest_route( 'frontend-filemanager/v1', '/delete/(?P<id>\d+)', array(
-		    'methods' => 'DELETE',
-		    'callback' => array( $this, 'delete' ),
-		  ));
-		});
-
-		add_action( 'rest_api_init', function () {
-		  register_rest_route( 'frontend-filemanager/v1', '/list', array(
+		  register_rest_route( 'frontend-filemanager/v1', '/list/page/(?P<page>\d+)', array(
 		    'methods' => 'GET',
 		    'callback' => array( $this, 'list_files' ),
 		  ));
@@ -199,12 +192,39 @@ final class Api {
 
 	}
 
-	public function list_files() {
+	public function list_files( $http_request ) {
 
 		global $wpdb;
+
+		$params = $http_request->get_params();
+		
+		// Get the total number of rows
+		// @Todo. Store the number of rows somewhere in table;
+		$count = $wpdb->get_row( $wpdb->prepare("SELECT count(id) as total FROM {$wpdb->prefix}frontend_file_manager 
+			WHERE file_owner_id = %d ORDER BY date_updated " , 
+			get_current_user_id()));
+
+		$total = 0;
+
+		if ( ! empty( $count ) ) {
+			$total = $count->total;
+		}
+		
+		$page = $params['page'];
+		$limit = 3;
+
+		$num_pages = floor( $total / $limit );
+		$offset = ($page-1) * $limit; 
+
+		if ( $page === 1 ) {
+			$offset = 0;
+		}
 		
 		$stmt = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}frontend_file_manager 
-			WHERE file_owner_id = %d ORDER BY DATE(date_updated) DESC LIMIT 5" , get_current_user_id());
+			WHERE file_owner_id = %d ORDER BY date_updated DESC LIMIT %d, %d" , 
+			get_current_user_id(),
+			$offset, $limit
+			);
 		
 		$results = $wpdb->get_results( $stmt, OBJECT );
 		$files = array();
@@ -215,17 +235,20 @@ final class Api {
 				$files[] = $result;
 			}
 		}
-		$response = array();
+		$response = array(
+				'message' => 'error_unauthorized',
+				'files' => array(),
+				'page' => $page,
+				'total' => $total,
+				'limit' => $limit,
+				'num_pages' => $num_pages,
+			);
 
 		if ( empty ( $results ) ) {
-			$response = array(
-					'message' => 'error_unauthorized'
-				);
+			$response['message'] = 'error_unauthorized';
 		} else {
-			$response = array(
-				'message' => 'success',
-				'files' => array_map( array( $this, 'sanitize_string'), $files)
-			);
+			$response['message'] = 'success';
+			$response['files'] = array_map( array( $this, 'sanitize_string'), $files);
 		}
 
 		return new \WP_REST_Response($response);
