@@ -203,7 +203,8 @@ final class Api {
 
 		global $wpdb;
 		
-		$stmt = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}frontend_file_manager WHERE file_owner_id = %d ORDER BY date_updated ASC" , get_current_user_id());
+		$stmt = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}frontend_file_manager 
+			WHERE file_owner_id = %d ORDER BY DATE(date_updated) DESC LIMIT 5" , get_current_user_id());
 		
 		$results = $wpdb->get_results( $stmt, OBJECT );
 		$files = array();
