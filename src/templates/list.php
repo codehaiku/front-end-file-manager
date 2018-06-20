@@ -1,6 +1,6 @@
 <li class="file-item" id="fefm-file-<%=id%>">
 	<div class="file-item-column file-thumb">
-		<img width="24" src="<%=file_icon%>" />
+		<img width="48" src="<%=file_icon%>" />
 	</div>
 	<div class="file-item-column file-label">
 		<a href="#file/<%=id%>" title="<%=file_label%>">
