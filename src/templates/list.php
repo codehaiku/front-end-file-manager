@@ -1,6 +1,6 @@
 <li class="file-item" id="fefm-file-<%=id%>">
 	<div class="file-item-column file-check-selector">
-		<input type="checkbox" value="" />
+		<input type="checkbox" name="file[<%=id%>]" />
 	</div>
 	<div class="file-item-column file-thumb">
 		<img width="48" src="<%=file_icon%>" />
@@ -25,7 +25,7 @@
 			<span class="fefm-action-label">Select Actions</span>
 		</a>
 		<ul class="file-item-column-file-actions-dropdown-ul inactive">
-			<li><a href="#">Edit</a></li>
+			<li><a href="#file/<%=id%>">Edit</a></li>
 			<li><a href="#">Copy</a></li>
 			<li><a href="#">Share</a></li>
 			<li><a data-file-id="<%=id%>" class="fefm-item-file-trash" href="#">Trash</a></li>
