@@ -13,6 +13,13 @@ final class Api {
 		});
 
 		add_action( 'rest_api_init', function () {
+		  register_rest_route( 'frontend-filemanager/v1', '/delete/(?P<id>\d+)', array(
+		    'methods' => 'DELETE',
+		    'callback' => array( $this, 'delete' ),
+		  ));
+		});
+		
+		add_action( 'rest_api_init', function () {
 		  register_rest_route( 'frontend-filemanager/v1', '/update', array(
 		    'methods' => 'POST',
 		    'callback' => array( $this, 'update' ),
@@ -211,7 +218,7 @@ final class Api {
 		}
 		
 		$page = $params['page'];
-		$limit = 3;
+		$limit = 5;
 
 		$num_pages = floor( $total / $limit );
 		$offset = ($page-1) * $limit; 
