@@ -11,6 +11,13 @@ final class Api {
 		    'callback' => array( $this, 'single' ),
 		  ));
 		});
+
+		add_action( 'rest_api_init', function () {
+		  register_rest_route( 'frontend-filemanager/v1', '/update', array(
+		    'methods' => 'POST',
+		    'callback' => array( $this, 'update' ),
+		  ));
+		});
 			
 		add_action( 'rest_api_init', function () {
 		  register_rest_route( 'frontend-filemanager/v1', '/delete/(?P<id>\d+)', array(
@@ -35,6 +42,36 @@ final class Api {
 		});
 	}
 
+	public function update( $http_request ) {
+
+		global $wpdb;
+
+		$params = $http_request->get_params();
+
+		require_once FEFM_DIR . '/src/Helpers.php';
+
+		$updated = $wpdb->update( 
+			Helpers::get_table_name(), 
+			array( 
+				'file_label' => $params['file_label'],
+				'file_description' => $params['file_description'],
+				'file_sharing_type' => $params['file_sharing_type'],
+				'date_updated' => current_time('mysql', 1)	
+			), 
+			array( 'id' => $params['id'] ), 
+			array( 
+				'%s',	// Label
+				'%s',	// Description
+				'%s'	// Sharing type
+			), 
+			array( '%d' ) 
+		);
+
+		$response = array('test'=>false);
+
+		return new \WP_REST_Response($response);
+	}
+
 	public function single( $http_request ) {
 		
 		global $wpdb;
@@ -49,13 +86,13 @@ final class Api {
 
 		$stmt = $wpdb->prepare( "SELECT * FROM " . Helpers::get_table_name() . " WHERE id = %d", $file_id );
 
-		$result = $wpdb->get_row( $stmt, OBJECT );
+		$result = $wpdb->get_row( $stmt, ARRAY_A );
  
 		if ( ! empty( $result ) ):
 
 			$status = 200;
 
-			$response = array('file' => $result);
+			$response = array('file' => array_map( 'esc_html', $result ) );
 
 		endif;
 		
@@ -166,7 +203,7 @@ final class Api {
 
 		global $wpdb;
 		
-		$stmt = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}frontend_file_manager WHERE file_owner_id = %d ORDER BY id ASC" , get_current_user_id());
+		$stmt = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}frontend_file_manager WHERE file_owner_id = %d ORDER BY date_updated ASC" , get_current_user_id());
 		
 		$results = $wpdb->get_results( $stmt, OBJECT );
 		$files = array();
@@ -186,11 +223,21 @@ final class Api {
 		} else {
 			$response = array(
 				'message' => 'success',
-				'files' => $files
+				'files' => array_map( array( $this, 'sanitize_string'), $files)
 			);
 		}
 
 		return new \WP_REST_Response($response);
+	}
+
+	public function sanitize_string($files) {
+		$node = array();
+		if ( ! empty ( $files ) ) {
+			foreach ( $files as $key => $val ) {
+				$node[$key] = esc_html( $val );
+			}
+		}
+		return $node;
 	}
 
 	public function set_upload_dir( $dirs ) {
