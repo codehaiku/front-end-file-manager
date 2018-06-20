@@ -66,6 +66,7 @@ ul#fefm-navigation{
 	margin: 0;
 }
 
+#fefm-wrap li.file-item .file-item-column.file-check-selector { flex-basis: 15px;}
 #fefm-wrap li.file-item .file-item-column.file-label { flex-basis: 40%;}
 #fefm-wrap li.file-item .file-item-column.file-actions { flex-basis: 12%;}/*@todo make this 5%*/
 #fefm-wrap li.file-item .file-item-column.file-sharing-type { flex-basis: 10%;}
@@ -167,7 +168,14 @@ div#fefm-pagination-inner-wrap ul#fefm-paging-ul li > a {
     position: relative;
     line-height: 2;
 }
-
+div#fefm-pagination-inner-wrap ul#fefm-paging-ul li > a > span {
+    padding: 0 10px;
+    display: inline-block;
+    width: 85px;
+}
+div#fefm-pagination-inner-wrap ul#fefm-paging-ul li > a > span.next {
+    width: 65px;
+}
 div#fefm-pagination-inner-wrap ul#fefm-paging-ul li:hover > a,
 div#fefm-pagination-inner-wrap ul#fefm-paging-ul li.active > a {
     color: #512DA8;
@@ -181,3 +189,4 @@ div#fefm-pagination-inner-wrap ul#fefm-paging-ul li > a.disabled {
     color: #dcdcdc;
     cursor: not-allowed;
 }
+
