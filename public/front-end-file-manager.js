@@ -90,25 +90,27 @@ jQuery(document).ready(function($){
 		},
 		add: function(file){
 			window.counter++;
-
 			if ( counter % 2 == 0 ) {
 				file.attributes.file_icon = frontend_filemanager.asset_uri + "file-type-icons/file-word.svg";
 			} else {
 				file.attributes.file_icon = frontend_filemanager.asset_uri + "file-type-icons/file-archive.svg";
 			}
+			file.attributes.file_icon = "http://3.bp.blogspot.com/-rpXmPrCKU5g/Vfip8MNSJoI/AAAAAAAAiYo/HvuQoHwfY-0/s1600/word%2Bbg.png";
 			
 			this.$el.prepend(this.template(file.attributes));
 
 		},
 		list_files: function(){
+
 			// Sync the file
-			
 			Backbone.sync('read', fileModel, {
 				url: frontend_filemanager.rest_url + 'list',
 				headers: {
 					'X-WP-Nonce': frontend_filemanager.nonce
 				},
 				success: function(response){
+					fileCollection.reset();
+					
 					$.each(response.files, function(index, file){
 						var __file = new FileModel;
 							__file.set({
@@ -122,7 +124,7 @@ jQuery(document).ready(function($){
 								date_updated: file.date_updated,
 								date_created: file.date_created
 							})
-						fileCollection.add(__file);
+						fileCollection.add(__file, { merge: true });
 					});
 				}
 			});
@@ -143,12 +145,32 @@ jQuery(document).ready(function($){
 	var FrontEndFileManagerView__Single = Backbone.View.extend({
 		template: _.template($('#fefm-single-view').html()),
 		el: '#fefm-single-view-wrap',
+		events: {
+			"submit #fefm-update-file": 'update',
+		},
+
 		model: fileModel,
+		update: function(e) {
+			e.preventDefault();
+			
+			this.model.set({
+				id: $('input[name=id]').val(),
+				file_label: $('input[name=file_label]').val(),
+				file_description: $('textarea[name=file_description]').val(),
+				file_sharing_type: $('select[name=file_sharing_type]').val(),
+			});
+
+			Backbone.sync('create', this.model, {
+				url: frontend_filemanager.rest_url + 'update',
+				success: function(response) {
+					console.log(response);
+				}
+			})
+		},
 		render: function(file_id) {
 			var that = this;
 			
 			this.$el.html( that.template( this.model.defaults ) );
-
 			Backbone.sync('read', this.model, {
 				url: frontend_filemanager.rest_url + 'file/' + file_id,
 				success: function(response) {
@@ -165,7 +187,8 @@ jQuery(document).ready(function($){
 	var FrontEndFileManagerRoute = Backbone.Router.extend({
 		routes: {
 			"file/:id": "single",
-			"list": "list"
+			"list": "list",
+			"": "list",// Default.
 		},
 		single: function (id) {
 			$('#fefm-wrap').css('display', 'none');
@@ -180,14 +203,12 @@ jQuery(document).ready(function($){
 			fileView.list_files();
 		},
 		initialize: function() {
-			fileView.list_files();
+			Backbone.history.start();
 		}
 	});
 
-	new FrontEndFileManagerRoute();
+	window.frontEndFileManagerRoute = new FrontEndFileManagerRoute();
 	
-	Backbone.history.start();
-
 	// == Uploader PLUPLOAD
 	var uploader = new plupload.Uploader({
 	  	browse_button: 'fefm-controls-btn-uploaded', 
