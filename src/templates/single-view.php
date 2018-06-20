@@ -5,7 +5,7 @@ action="<?php echo esc_url( rest_url('frontend-filemanager/v1/update') ); ?>">
 
 	<div class="form-group">
 		<label for="fefm-form-file-label"><?php esc_html_e('Label', 'front-end-file-manager'); ?></label>
-		<input type="text" class="form-control" id="fefm-form-file-label" name="file_label" value="<%=file_label%>">
+		<input autocomplete="off" type="text" class="form-control" id="fefm-form-file-label" name="file_label" value="<%=file_label%>">
 		<input type="hidden" name="id" value="<%=id%>">
 	</div>
 
