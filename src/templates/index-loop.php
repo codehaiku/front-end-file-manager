@@ -15,10 +15,14 @@
 	</ul>
 </div>
 <div id="fefm-single-view-wrap"></div>
+<div id="fefm-pagination-wrap"></div>
 
 <script id="fefm-single-view" type="text/template">
 	<?php include_once trailingslashit( FEFM_DIR ) . 'src/templates/single-view.php'; ?>
 </script>
 <script id="fefm-single-file-template" type="text/template">
 	<?php include_once trailingslashit( FEFM_DIR ) . 'src/templates/list.php'; ?>
+</script>
+<script id="fefm-pagination-template" type="text/template">
+	<?php include_once trailingslashit( FEFM_DIR ) . 'src/templates/pagination.php'; ?>
 </script>
