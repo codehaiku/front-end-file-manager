@@ -19,7 +19,11 @@ jQuery(document).ready(function($){
 
 	// Create the collection
 	var FileCollection = Backbone.Collection.extend({
-	  	model: FileModel
+	  	model: FileModel,
+	  	initialize: function() {
+	  		this.sort_by = "";
+	  		this.sort_dir = "";
+	  	}
 	});
 
 	window.fileCollection = new FileCollection;
@@ -34,12 +38,17 @@ jQuery(document).ready(function($){
 	});
 	window.frontEndFileManagerPaging_View = new FrontEndFileManagerPaging_View;
 
+	// Toolbar View
 	var FrontEndFileManagerView__Toolbar = Backbone.View.extend({
 		collection: fileCollection,
 		model: fileModel,
 		el: '#fefm-navigation',
 		events: {
-			"submit #fefm-search-form": 'search'
+			"submit #fefm-search-form": 'search',
+			'click #fefm-search-close-search': 'cancel_search'
+		},
+		cancel_search: function() {
+			frontEndFileManagerRoute.navigate("list", {trigger: true});
 		},
 		search: function(e) {
 			
@@ -50,10 +59,29 @@ jQuery(document).ready(function($){
 			} else {
 				frontEndFileManagerRoute.navigate("list/search/"+search_keywords+"/page/1", {trigger: true});
 			}
-			
+
 		}
 
 	}); 
+
+	// Sorting actions view.
+	var FrontEndFileManagerView__Sorting = Backbone.View.extend({
+		el: '#fefm-file-actions',
+		collection: fileCollection,
+		events: {
+			"click #fefm-action-sort-by-title": 'sort_by_title'
+		},
+		sort_by_title(e){
+			e.preventDefault();
+			fileView.list_files({
+				search_keywords: $('#fefm-file-dir-search').val(),
+				page: 1
+			});
+		},
+	});
+
+	window.frontEndFileManagerView__Sorting = new FrontEndFileManagerView__Sorting;
+	
 	window.frontEndFileManagerView__Toolbar = new FrontEndFileManagerView__Toolbar;
 
 	// Create the View
@@ -62,6 +90,10 @@ jQuery(document).ready(function($){
 		model: fileModel,
 		template: _.template($('#fefm-single-file-template').html()),
 		el: '#fefm-wrap-ul',
+		sorting: {
+			sort_by: '', 
+			sort_dir: '', 
+		},
 		events: {
 			"click .fefm-item-file-trash": "trash",
 			"click .file-item-column-file-actions-dropdown": "toggle_action_menu",
@@ -147,6 +179,7 @@ jQuery(document).ready(function($){
 			window.frontEndFileManagerPaging_View.render(settings);
 		},
 		list_files: function(settings){
+
 			var that = this;
 			var client_data = {};
 			var keywords = '';
@@ -260,6 +293,8 @@ jQuery(document).ready(function($){
 				page: _page,
 				search_keywords: keywords
 			});
+
+			$('#fefm-search-close-search').addClass('active');
 		},
 		single: function (id) {
 			$('#fefm-wrap').css('display', 'none');
@@ -272,6 +307,9 @@ jQuery(document).ready(function($){
 			$('#fefm-pagination-wrap').css('display', 'block');
 			$('#fefm-wrap').css('display', 'block');
 			$('#fefm-single-view-wrap').css('display', 'none');
+			
+			$('#fefm-search-close-search').removeClass('active');
+			$('#fefm-file-dir-search').val('');
 
 			if ( ! _page ) {
 				_page = 1;
