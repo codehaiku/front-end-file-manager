@@ -17,6 +17,7 @@
 					<input type="search" autocomplete="off" name="fefm-file-dir-search" id="fefm-file-dir-search" 
 						placeholder="<?php esc_html_e('Search', 'front-end-file-manager'); ?>">
 				</form>
+				<span id="fefm-search-close-search">&times;</span>
 			</div>
 		</li>
 	</ul>
@@ -25,10 +26,18 @@
 		<li class="file-actions-check-selector">
 			<input type="checkbox" />
 		</li>
-		<li class="file-actions-check-title">Title</li>
-		<li class="file-actions-check-last-modified">Last Modified</li>
-		<li class="file-actions-check-sharing-type">Sharing</li>
-		<li class="file-actions-check-actions">Actions</li>
+		<li class="file-actions-check-title">
+			<a href="#" id="fefm-action-sort-by-title">Title</a>
+		</li>
+		<li class="file-actions-check-last-modified">
+			<a href="#" id="fefm-action-sort-by-updated">Last Modified</a>
+		</li>
+		<li class="file-actions-check-sharing-type">
+			Sharing
+		</li>
+		<li class="file-actions-check-actions">
+			Actions 
+		</li>
 	</ul>
 
 	<ul id="fefm-wrap-ul">
