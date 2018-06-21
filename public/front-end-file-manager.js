@@ -1,5 +1,19 @@
 jQuery(document).ready(function($){
 
+	"use strict";
+	window.fefm = {};
+	// The file browsing model.
+	var browsingPropertyModel = Backbone.Model.extend({
+		defaults: {
+			search_keywords: "",
+			page: 1,
+			sort_by: "",
+			sort_dir: ""
+		}
+	});
+
+	window.fefm.browsingProps = new browsingPropertyModel;
+
 	// Create Model
 	var FileModel = Backbone.Model.extend({
 		idAttribute: "id",
@@ -21,8 +35,8 @@ jQuery(document).ready(function($){
 	var FileCollection = Backbone.Collection.extend({
 	  	model: FileModel,
 	  	initialize: function() {
-	  		this.sort_by = "";
-	  		this.sort_dir = "";
+	  		this.sort_by = "date_updated";
+	  		this.sort_dir = "DESC";
 	  	}
 	});
 
@@ -53,7 +67,7 @@ jQuery(document).ready(function($){
 		search: function(e) {
 			
 			e.preventDefault();
-			var search_keywords = $('#fefm-file-dir-search').val();
+			var search_keywords = $('#fefm-file-dir-search').val().trim();
 			if ( 0 === search_keywords.length ) {
 				frontEndFileManagerRoute.navigate("list", {trigger: true});
 			} else {
@@ -72,9 +86,12 @@ jQuery(document).ready(function($){
 			"click .fefm-action-sort": 'sort'
 		},
 		sort: function(e){
+
 			e.preventDefault();
+
 			var sort_type = $(e.target).attr('data-sort-by');
 			this.collection.sort_by = sort_type;
+
 			if ( this.collection.sort_dir.length == 0 ) {
 				this.collection.sort_dir = 'ASC';
 			}		
@@ -83,12 +100,14 @@ jQuery(document).ready(function($){
 			} else { 
 				this.collection.sort_dir = 'ASC'; 
 			}
-			fileView.list_files({
-				search_keywords: $('#fefm-file-dir-search').val(),
-				page: 1,
+
+			fefm.browsingProps.set({
+				search_keywords: $('#fefm-file-dir-search').val().trim(),
 				sort_by: this.collection.sort_by,
 				sort_dir: this.collection.sort_dir
 			});
+
+			fileView.list_files( fefm.browsingProps.attributes );
 		},
 	});
 
@@ -300,14 +319,19 @@ jQuery(document).ready(function($){
 		},
 		search: function( keywords, _page ) {
 			
-			$('#fefm-file-dir-search').val( keywords );
-
-			fileView.list_files({
+			$('#fefm-file-dir-search').val( keywords.trim() );
+			
+			fefm.browsingProps.set({
 				page: _page,
 				search_keywords: keywords
 			});
 
+			fileView.list_files( fefm.browsingProps.attributes );
+
 			$('#fefm-search-close-search').addClass('active');
+
+			return;
+
 		},
 		single: function (id) {
 			$('#fefm-wrap').css('display', 'none');
@@ -324,12 +348,15 @@ jQuery(document).ready(function($){
 			$('#fefm-search-close-search').removeClass('active');
 			$('#fefm-file-dir-search').val('');
 
+			// Reset browsing model.
+			fefm.browsingProps.set({
+				search_keywords: '',
+			});
 			if ( ! _page ) {
 				_page = 1;
 			}
-			fileView.list_files({
-				page: _page
-			});
+			fefm.browsingProps.set({page: _page});
+			fileView.list_files( fefm.browsingProps.attributes );
 		},
 		initialize: function() {
 			Backbone.history.start();
@@ -337,7 +364,9 @@ jQuery(document).ready(function($){
 	});
 
 	window.frontEndFileManagerRoute = new FrontEndFileManagerRoute();
-	
+	frontEndFileManagerRoute.on('route', function(){
+		console.log(fefm.browsingProps.attributes);
+	});
 	// == Uploader PLUPLOAD
 	var uploader = new plupload.Uploader({
 	  	browse_button: 'fefm-controls-btn-uploaded', 
