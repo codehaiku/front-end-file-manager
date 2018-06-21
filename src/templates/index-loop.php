@@ -13,6 +13,7 @@
 				<img width="24" src="<?php echo plugins_url();?>/front-end-file-manager/public/images/file-type-icons/folder-open.svg">
 			</a>
 		</li>
+		<li>Trash</li>
 		<li class="fefm-search-dir-wrap">
 			<div class="fefm-search-dir-inner-wrap">
 				<form action="" method="GET" id="fefm-search-form">
@@ -26,7 +27,7 @@
 
 	<ul id="fefm-file-actions">
 		<li class="file-actions-check-selector">
-			<input type="checkbox" />
+			<input type="checkbox" id="fefm-check-all-file" />
 		</li>
 		<li class="file-actions-check-title">
 			<a href="#" class="fefm-action-sort" id="fefm-action-sort-by-title" data-sort-by="file_label">Title</a>
