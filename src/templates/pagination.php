@@ -25,7 +25,8 @@ function fefm_pagination(c, m) {
     return rangeWithDots;
 }
 %>
-	<% if ( num_pages >= 1 ) { %>
+	<% if ( num_pages > 1 ) { %>
+	
 		<ul id="fefm-paging-ul">
 			<% if ( current_page > 1 ) { %>
 				<li>
@@ -44,10 +45,16 @@ function fefm_pagination(c, m) {
 							<%=paging[i]%>
 						</a>
 					<% } else {%>
-						<a title="<?php echo esc_html_e("Go to page: ", "front-end-file-manager"); ?><%=paging[i]%>" href="#list/page/<%=paging[i]%>">
-							<%=paging[i]%>
-						</a>
-					<% }%>
+						<% if ( 0 === search_keywords.length  ) { %>
+							<a title="<?php echo esc_html_e("Go to page: ", "front-end-file-manager"); ?><%=paging[i]%>" href="#list/page/<%=paging[i]%>">
+								<%=paging[i]%>
+							</a>
+						<% } else { %>
+							<a title="<?php echo esc_html_e("Go to page: ", "front-end-file-manager"); ?><%=paging[i]%>" href="#list/search/<%=search_keywords%>/page/<%=paging[i]%>">
+								<%=paging[i]%>
+							</a>
+						<% } %>
+					<% } %>
 				</li>
 			<% } %>
 			<% if ( current_page < num_pages ) { %>
