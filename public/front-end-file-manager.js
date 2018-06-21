@@ -33,6 +33,29 @@ jQuery(document).ready(function($){
 		}
 	});
 	window.frontEndFileManagerPaging_View = new FrontEndFileManagerPaging_View;
+
+	var FrontEndFileManagerView__Toolbar = Backbone.View.extend({
+		collection: fileCollection,
+		model: fileModel,
+		el: '#fefm-navigation',
+		events: {
+			"submit #fefm-search-form": 'search'
+		},
+		search: function(e) {
+			
+			e.preventDefault();
+			var search_keywords = $('#fefm-file-dir-search').val();
+			if ( 0 === search_keywords.length ) {
+				frontEndFileManagerRoute.navigate("list", {trigger: true});
+			} else {
+				frontEndFileManagerRoute.navigate("list/search/"+search_keywords+"/page/1", {trigger: true});
+			}
+			
+		}
+
+	}); 
+	window.frontEndFileManagerView__Toolbar = new FrontEndFileManagerView__Toolbar;
+
 	// Create the View
 	var FileView = Backbone.View.extend({
 		collection: fileCollection,
@@ -43,6 +66,10 @@ jQuery(document).ready(function($){
 			"click .fefm-item-file-trash": "trash",
 			"click .file-item-column-file-actions-dropdown": "toggle_action_menu",
 			"click .fefm-toolbar-close": 'close_toolbar'
+		},
+		search: function(e) {
+			e.preventDefault();
+			console.log( 'search' );
 		},
 		initialize: function() {
 			this.listenTo(this.collection, "add", this.add);
@@ -121,13 +148,20 @@ jQuery(document).ready(function($){
 		},
 		list_files: function(settings){
 			var that = this;
-			
+			var client_data = {};
+			var keywords = '';
 			// Sync the file
+			if ( settings.search_keywords ) {
+				keywords = settings.search_keywords;
+				client_data.search_keywords = settings.search_keywords
+			}
+
 			Backbone.sync('read', fileModel, {
 				url: frontend_filemanager.rest_url + 'list/page/' + settings.page,
 				headers: {
 					'X-WP-Nonce': frontend_filemanager.nonce
 				},
+				data: client_data,
 				success: function(response){
 					fileCollection.reset();
 					that.$el.html('');
@@ -149,7 +183,8 @@ jQuery(document).ready(function($){
 					// Update pagination.
 					that.updatePagination({
 						current_page: response.page,
-						num_pages: response.num_pages
+						num_pages: response.num_pages,
+						search_keywords: keywords
 					});
 				}
 			});
@@ -214,7 +249,17 @@ jQuery(document).ready(function($){
 			"file/:id": "single",
 			"list": "list",
 			"list/page/:page": "list",
+			"list/search/:keywords/page/:page": "search",
 			"": "list",// Default.
+		},
+		search: function( keywords, _page ) {
+			
+			$('#fefm-file-dir-search').val( keywords );
+
+			fileView.list_files({
+				page: _page,
+				search_keywords: keywords
+			});
 		},
 		single: function (id) {
 			$('#fefm-wrap').css('display', 'none');
