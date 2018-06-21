@@ -261,4 +261,32 @@ ul#fefm-file-actions .file-actions-check-sharing-type { flex-basis: 10%; }
 #fefm-search-close-search.active {
     display: block;
 }
+.fefm-action-sort.active {
+    border-bottom: 1px solid;
+}
+.fefm-action-sort.active:after{
+    content: " ";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-top: 4px dashed;
+    border-top: 4px solid\9;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+}
+.fefm-action-sort.active.asc:after{
+    content: " ";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-top: 0 none;
+    border-bottom: 4px dashed;
+    border-bottom: 4px solid\9;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+}
 
