@@ -83,7 +83,20 @@ jQuery(document).ready(function($){
 		el: '#fefm-file-actions',
 		collection: fileCollection,
 		events: {
-			"click .fefm-action-sort": 'sort'
+			"click .fefm-action-sort": 'sort',
+			'click #fefm-check-all-file': 'multiple_file_selector'
+		},
+		multiple_file_selector: function(e) {
+			var element = $(e.target);
+			if ( ( element ).is(':checked') ) {
+				$.each( $('.js-file-selector'), function(){
+					$(this).attr('checked', 'checked');
+				});
+			} else {
+				$.each( $('.js-file-selector'), function(){
+					$(this).removeAttr('checked');
+				});
+			}
 		},
 		sort: function(e){
 
