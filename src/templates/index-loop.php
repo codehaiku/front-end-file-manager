@@ -9,7 +9,9 @@
 
 	<ul id="fefm-navigation">
 		<li>
-			<img width="24" src="<?php echo plugins_url();?>/front-end-file-manager/public/images/file-type-icons/folder-open.svg">
+			<a href="#list" title="<?php esc_html_e('Go back to root directory', 'front-end-file-manager'); ?>">
+				<img width="24" src="<?php echo plugins_url();?>/front-end-file-manager/public/images/file-type-icons/folder-open.svg">
+			</a>
 		</li>
 		<li class="fefm-search-dir-wrap">
 			<div class="fefm-search-dir-inner-wrap">
