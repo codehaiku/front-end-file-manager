@@ -11,6 +11,14 @@
 		<li>
 			<img width="24" src="<?php echo plugins_url();?>/front-end-file-manager/public/images/file-type-icons/folder-open.svg">
 		</li>
+		<li class="fefm-search-dir-wrap">
+			<div class="fefm-search-dir-inner-wrap">
+				<form action="" method="GET" id="fefm-search-form">
+					<input type="search" autocomplete="off" name="fefm-file-dir-search" id="fefm-file-dir-search" 
+						placeholder="<?php esc_html_e('Search', 'front-end-file-manager'); ?>">
+				</form>
+			</div>
+		</li>
 	</ul>
 
 	<ul id="fefm-file-actions">
@@ -19,7 +27,7 @@
 		</li>
 		<li class="file-actions-check-title">Title</li>
 		<li class="file-actions-check-last-modified">Last Modified</li>
-		<li class="file-actions-check-sharing-type">Sharing Type</li>
+		<li class="file-actions-check-sharing-type">Sharing</li>
 		<li class="file-actions-check-actions">Actions</li>
 	</ul>
 
