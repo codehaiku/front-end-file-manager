@@ -204,24 +204,38 @@ final class Api {
 		global $wpdb;
 
 		$params = $http_request->get_params();
-		
+
+		$user_id = get_current_user_id();
+		$user_id = 1;
+		$search_keywords = '';
+
+		if ( ! empty( $params['search_keywords'] )  ) {
+			$search_keywords = $wpdb->esc_like( $params['search_keywords'] );
+		}
+
 		// Get the total number of rows
 		// @Todo. Store the number of rows somewhere in table;
 		$count = $wpdb->get_row( $wpdb->prepare("SELECT count(id) as total FROM {$wpdb->prefix}frontend_file_manager 
-			WHERE file_owner_id = %d ORDER BY date_updated " , 
-			get_current_user_id()));
+			WHERE file_owner_id = %d AND file_label LIKE %s ORDER BY date_updated " , 
+			$user_id, '%'.$search_keywords.'%' ));
 
 		$total = 0;
 
 		if ( ! empty( $count ) ) {
-			$total = $count->total;
+			$total = absint( $count->total );
 		}
 		
-		$page = $params['page'];
+		$page = absint( $params['page'] );
 		$limit = 5;
 
-		$num_pages = floor( $total / $limit );
-		$offset = ($page-1) * $limit; 
+		$num_pages = $total / $limit;
+		
+		if ( $num_pages < 1 && $num_pages > 0 ) {
+			$num_pages = 1;
+		} else {
+			$num_pages = floor($num_pages);
+		}
+		$offset = ( $page - 1 ) * $limit; 
 
 		if ( $page === 1 ) {
 			$offset = 0;
@@ -229,9 +243,13 @@ final class Api {
 		
 		$stmt = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}frontend_file_manager 
 			WHERE file_owner_id = %d ORDER BY date_updated DESC LIMIT %d, %d" , 
-			get_current_user_id(),
-			$offset, $limit
-			);
+			$user_id, $offset, $limit );
+
+		if ( ! empty ( $search_keywords ) ) {
+			$stmt = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}frontend_file_manager 
+				WHERE file_owner_id = %d AND file_label LIKE %s ORDER BY date_updated DESC LIMIT %d, %d" , 
+				$user_id, '%'.$search_keywords.'%', $offset, $limit );
+		}
 		
 		$results = $wpdb->get_results( $stmt, OBJECT );
 		$files = array();
@@ -245,10 +263,10 @@ final class Api {
 		$response = array(
 				'message' => 'error_unauthorized',
 				'files' => array(),
-				'page' => $page,
-				'total' => $total,
-				'limit' => $limit,
-				'num_pages' => $num_pages,
+				'page' => absint( $page ),
+				'total' => absint( $total ),
+				'limit' => absint( $limit ),
+				'num_pages' => absint( $num_pages ),
 			);
 
 		if ( empty ( $results ) ) {
