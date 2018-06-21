@@ -221,6 +221,14 @@ jQuery(document).ready(function($){
 				client_data.sort_dir = fileCollection.sort_dir;
 			}
 
+			// Upload sorting view.
+			var browsingAttr = fefm.browsingProps.attributes;
+
+			$('#fefm-file-actions > li > a').removeClass('active asc desc');
+			if ( browsingAttr.sort_by.length >=1 ) {
+				$('#fefm-file-actions > li > a[data-sort-by='+browsingAttr.sort_by+']').addClass('active').addClass(browsingAttr.sort_dir.toLowerCase());
+			} 
+
 			Backbone.sync('read', fileModel, {
 				url: frontend_filemanager.rest_url + 'list/page/' + settings.page,
 				headers: {
@@ -251,6 +259,7 @@ jQuery(document).ready(function($){
 						num_pages: response.num_pages,
 						search_keywords: keywords,
 					});
+					
 				}
 			});
 		},
@@ -323,7 +332,9 @@ jQuery(document).ready(function($){
 			
 			fefm.browsingProps.set({
 				page: _page,
-				search_keywords: keywords
+				search_keywords: keywords,
+				sort_by: fileCollection.sort_by,
+				sort_dir: fileCollection.sort_dir
 			});
 
 			fileView.list_files( fefm.browsingProps.attributes );
@@ -351,6 +362,8 @@ jQuery(document).ready(function($){
 			// Reset browsing model.
 			fefm.browsingProps.set({
 				search_keywords: '',
+				sort_by: fileCollection.sort_by,
+				sort_dir: fileCollection.sort_dir
 			});
 			if ( ! _page ) {
 				_page = 1;
@@ -364,9 +377,7 @@ jQuery(document).ready(function($){
 	});
 
 	window.frontEndFileManagerRoute = new FrontEndFileManagerRoute();
-	frontEndFileManagerRoute.on('route', function(){
-		console.log(fefm.browsingProps.attributes);
-	});
+	
 	// == Uploader PLUPLOAD
 	var uploader = new plupload.Uploader({
 	  	browse_button: 'fefm-controls-btn-uploaded', 
