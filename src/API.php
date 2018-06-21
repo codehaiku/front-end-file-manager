@@ -241,17 +241,14 @@ final class Api {
 
 		$num_pages = $total / $limit;
 		
-		if ( $num_pages < 1 && $num_pages > 0 ) {
-			$num_pages = 1;
-		} else {
-			$num_pages = floor($num_pages);
-		}
+		$num_pages = ceil( $num_pages );
+
 		$offset = ( $page - 1 ) * $limit; 
 
 		if ( $page === 1 ) {
 			$offset = 0;
 		}
-		
+
 		$stmt = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}frontend_file_manager 
 			WHERE file_owner_id = %d ORDER BY ".esc_sql($sort_by)." ".esc_sql($sort_dir)." LIMIT %d, %d" , 
 			$user_id, $offset, $limit );
