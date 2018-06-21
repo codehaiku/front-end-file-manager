@@ -27,10 +27,10 @@
 			<input type="checkbox" />
 		</li>
 		<li class="file-actions-check-title">
-			<a href="#" id="fefm-action-sort-by-title">Title</a>
+			<a href="#" class="fefm-action-sort" id="fefm-action-sort-by-title" data-sort-by="file_label">Title</a>
 		</li>
 		<li class="file-actions-check-last-modified">
-			<a href="#" id="fefm-action-sort-by-updated">Last Modified</a>
+			<a href="#" class="fefm-action-sort"  id="fefm-action-sort-by-updated" data-sort-by="date_updated">Last Modified</a>
 		</li>
 		<li class="file-actions-check-sharing-type">
 			Sharing

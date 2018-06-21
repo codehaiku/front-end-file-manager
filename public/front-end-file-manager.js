@@ -69,13 +69,25 @@ jQuery(document).ready(function($){
 		el: '#fefm-file-actions',
 		collection: fileCollection,
 		events: {
-			"click #fefm-action-sort-by-title": 'sort_by_title'
+			"click .fefm-action-sort": 'sort'
 		},
-		sort_by_title(e){
+		sort: function(e){
 			e.preventDefault();
+			var sort_type = $(e.target).attr('data-sort-by');
+			this.collection.sort_by = sort_type;
+			if ( this.collection.sort_dir.length == 0 ) {
+				this.collection.sort_dir = 'ASC';
+			}		
+			if ( this.collection.sort_dir == 'ASC' ) {
+				this.collection.sort_dir = 'DESC';
+			} else { 
+				this.collection.sort_dir = 'ASC'; 
+			}
 			fileView.list_files({
 				search_keywords: $('#fefm-file-dir-search').val(),
-				page: 1
+				page: 1,
+				sort_by: this.collection.sort_by,
+				sort_dir: this.collection.sort_dir
 			});
 		},
 	});
@@ -90,10 +102,6 @@ jQuery(document).ready(function($){
 		model: fileModel,
 		template: _.template($('#fefm-single-file-template').html()),
 		el: '#fefm-wrap-ul',
-		sorting: {
-			sort_by: '', 
-			sort_dir: '', 
-		},
 		events: {
 			"click .fefm-item-file-trash": "trash",
 			"click .file-item-column-file-actions-dropdown": "toggle_action_menu",
@@ -101,7 +109,6 @@ jQuery(document).ready(function($){
 		},
 		search: function(e) {
 			e.preventDefault();
-			console.log( 'search' );
 		},
 		initialize: function() {
 			this.listenTo(this.collection, "add", this.add);
@@ -188,6 +195,12 @@ jQuery(document).ready(function($){
 				keywords = settings.search_keywords;
 				client_data.search_keywords = settings.search_keywords
 			}
+			if ( settings.sort_by ) {
+				client_data.sort_by = fileCollection.sort_by;
+			}
+			if ( settings.sort_dir ) {
+				client_data.sort_dir = fileCollection.sort_dir;
+			}
 
 			Backbone.sync('read', fileModel, {
 				url: frontend_filemanager.rest_url + 'list/page/' + settings.page,
@@ -217,7 +230,7 @@ jQuery(document).ready(function($){
 					that.updatePagination({
 						current_page: response.page,
 						num_pages: response.num_pages,
-						search_keywords: keywords
+						search_keywords: keywords,
 					});
 				}
 			});

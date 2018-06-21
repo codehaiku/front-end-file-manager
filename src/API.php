@@ -209,6 +209,17 @@ final class Api {
 		$user_id = 1;
 		$search_keywords = '';
 
+		$sort_by = 'date_updated';
+		$sort_dir = 'DESC';
+
+		if ( ! empty( $params['sort_by'] ) ) {
+			$sort_by = $params['sort_by'];
+		}
+
+		if ( ! empty ( $params['sort_dir'] ) ) {
+			$sort_dir = $params['sort_dir'];
+		}
+
 		if ( ! empty( $params['search_keywords'] )  ) {
 			$search_keywords = $wpdb->esc_like( $params['search_keywords'] );
 		}
@@ -216,7 +227,7 @@ final class Api {
 		// Get the total number of rows
 		// @Todo. Store the number of rows somewhere in table;
 		$count = $wpdb->get_row( $wpdb->prepare("SELECT count(id) as total FROM {$wpdb->prefix}frontend_file_manager 
-			WHERE file_owner_id = %d AND file_label LIKE %s ORDER BY date_updated " , 
+			WHERE file_owner_id = %d AND file_label LIKE %s " , 
 			$user_id, '%'.$search_keywords.'%' ));
 
 		$total = 0;
@@ -242,12 +253,12 @@ final class Api {
 		}
 		
 		$stmt = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}frontend_file_manager 
-			WHERE file_owner_id = %d ORDER BY date_updated DESC LIMIT %d, %d" , 
+			WHERE file_owner_id = %d ORDER BY ".esc_sql($sort_by)." ".esc_sql($sort_dir)." LIMIT %d, %d" , 
 			$user_id, $offset, $limit );
 
 		if ( ! empty ( $search_keywords ) ) {
 			$stmt = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}frontend_file_manager 
-				WHERE file_owner_id = %d AND file_label LIKE %s ORDER BY date_updated DESC LIMIT %d, %d" , 
+				WHERE file_owner_id = %d AND file_label LIKE %s ORDER BY ".esc_sql($sort_by)." ".esc_sql($sort_dir)." LIMIT %d, %d" , 
 				$user_id, '%'.$search_keywords.'%', $offset, $limit );
 		}
 		
