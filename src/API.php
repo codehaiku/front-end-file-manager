@@ -12,6 +12,14 @@ final class Api {
 		  ));
 		});
 
+		// Delete multiple
+		add_action( 'rest_api_init', function () {
+		  register_rest_route( 'frontend-filemanager/v1', '/trash-multiple', array(
+		    'methods' => 'DELETE',
+		    'callback' => array( $this, 'trash_multiple' ),
+		  ));
+		});
+
 		add_action( 'rest_api_init', function () {
 		  register_rest_route( 'frontend-filemanager/v1', '/delete/(?P<id>\d+)', array(
 		    'methods' => 'DELETE',
@@ -40,6 +48,60 @@ final class Api {
 		    'callback' => array( $this, 'upload' ),
 		  ));
 		});
+	}
+
+	public function trash_multiple( $http_request ) {
+		
+		global $wpdb;
+
+		$params = $http_request->get_params();
+		
+		$file_ids = array();
+
+		$files = $params['files'];
+
+		// Sanitize the ids.
+		
+		if ( empty( $files ) ) {
+			return new \WP_REST_Response(array(
+					'message' => esc_html__('No files were selected'),
+					'type' => 'error'
+				));
+		}
+
+		require_once FEFM_DIR . '/src/Helpers.php';
+
+		$query_string = "DELETE FROM " . Helpers::get_table_name() . " WHERE id IN({$files})";
+
+		$is_deleted = $wpdb->query( $query_string );
+
+		if ( ! $is_deleted ) {
+			return new \WP_REST_Response(array(
+					'message' => esc_html__('There was an error deleting files.', 'front-end-file-manager'),
+					'type' => 'error'
+				));
+		}
+
+		$file_ids = implode(',', $file_ids);
+
+		if ( ! empty( $file_ids ) ) {
+			foreach ($file_ids as $file_id) {
+				$file_available = Helpers::get_user_file_path($file_id);
+				wp_delete_file($file_available);
+				do_action('fefm_file_deleted', $file_available);
+			}
+		}
+
+		do_action('fefm_files_deleted');
+
+		$response = array(
+			'type' => 'success',
+			'message' => esc_html__('Selected files were successfully deleted.', 'front-end-file-manager')
+		);
+
+
+		return new \WP_REST_Response($response);
+
 	}
 
 	public function update( $http_request ) {
