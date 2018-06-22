@@ -332,6 +332,9 @@ jQuery(document).ready(function($){
 				client_data.sort_dir = fileCollection.sort_dir;
 			}
 
+			// Hide the no files found
+			$('.fefm-no-files-found').removeClass('active');
+			
 			// Upload sorting view.
 			var browsingAttr = fefm.browsingProps.attributes;
 
@@ -354,21 +357,26 @@ jQuery(document).ready(function($){
 				success: function(response){
 					fileCollection.reset();
 					that.$el.html('');
-					$.each(response.files, function(index, file){
-						var __file = new FileModel;
-							__file.set({
-								id: file.id,
-								file_owner_id: file.file_owner_id,
-								file_name: file.file_name,
-								file_label: file.file_label,
-								file_type: file.file_type,
-								file_description: file.file_description,
-								file_sharing_type: file.file_sharing_type,
-								date_updated: file.date_updated,
-								date_created: file.date_created
-							})
-						fileCollection.add(__file);
-					});
+					if ( response.files.length > 1 ) {
+						$.each(response.files, function(index, file){
+							var __file = new FileModel;
+								__file.set({
+									id: file.id,
+									file_owner_id: file.file_owner_id,
+									file_name: file.file_name,
+									file_label: file.file_label,
+									file_type: file.file_type,
+									file_description: file.file_description,
+									file_sharing_type: file.file_sharing_type,
+									date_updated: file.date_updated,
+									date_created: file.date_created
+								})
+							fileCollection.add(__file);
+						});
+						$('.fefm-no-files-found').removeClass('active');
+					} else {
+						$('.fefm-no-files-found').addClass('active');
+					}
 					// Update pagination.
 					that.updatePagination({
 						current_page: response.page,
