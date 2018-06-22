@@ -72,6 +72,7 @@
 		</ul>
 	</div>
 
+	<div id="fefm-wrap-footer"></div>
 	<div id="fefm-preloader">
 		<div id="fefm-preloader-wrap">
 			<div id="fefm-preloader-inner-wrap">
@@ -82,6 +83,8 @@
 			</div>
 		</div>
 	</div>
+
+
 </div>
 <div id="fefm-single-view-wrap"></div>
 <div id="fefm-pagination-wrap"></div>
