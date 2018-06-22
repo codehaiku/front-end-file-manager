@@ -299,7 +299,7 @@ final class Api {
 		}
 		
 		$page = absint( $params['page'] );
-		$limit = 5;
+		$limit = 10;
 
 		$num_pages = $total / $limit;
 		
