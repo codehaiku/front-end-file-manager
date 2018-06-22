@@ -45,11 +45,22 @@ jQuery(document).ready(function($){
 
 	// Error Views
 	var FrontEndFileManagerView_Notices = Backbone.View.extend({
-		element: '',
-		render: function( type, message ){
-			console.log(type);
-			console.log(message);
+		element: '#fefm-preloader',
+		render: function( type, message = "loading"){
+			$('#fefm-preloader').addClass('active');
+			$('#fefm-preloader > #fefm-preloader-inner-wrap').addClass(type).addClass('active');
+			$('#fefm-message').html(message);
+			$('#fefm-wrap-ul').css('opacity', 0.45);
 		},
+		hide: function() {
+			setTimeout(function(){
+				// Remove all class.
+				document.getElementById('fefm-preloader').className="";
+				$('#fefm-message').html('');
+				$('#fefm-wrap-ul').css('opacity', 1);
+			}, 500);
+			
+		}
 	});
 	window.frontEndFileManagerView_Notices = new FrontEndFileManagerView_Notices;
 
@@ -92,7 +103,7 @@ jQuery(document).ready(function($){
 			e.preventDefault();
 			var selected_files_ids = this.checked_files_collection();
 			var that = this;
-
+			frontEndFileManagerView_Notices.render( 'progress', 'Sending selected files to trash. Please wait');
 			Backbone.sync( 'delete', this.model, {
 				url: frontend_filemanager.rest_url + 'trash-multiple?files=' + selected_files_ids.join(),
 				headers: {
@@ -291,10 +302,14 @@ jQuery(document).ready(function($){
 			// Upload sorting view.
 			var browsingAttr = fefm.browsingProps.attributes;
 
+			$('#fefm-check-all-file').removeAttr('checked');
+
 			$('#fefm-file-actions > li > a').removeClass('active asc desc');
 			if ( browsingAttr.sort_by.length >=1 ) {
 				$('#fefm-file-actions > li > a[data-sort-by='+browsingAttr.sort_by+']').addClass('active').addClass(browsingAttr.sort_dir.toLowerCase());
 			} 
+
+			frontEndFileManagerView_Notices.render('progress', 'Getting your files ready. Please wait');
 
 			Backbone.sync('read', fileModel, {
 				url: frontend_filemanager.rest_url + 'list/page/' + settings.page,
@@ -326,6 +341,7 @@ jQuery(document).ready(function($){
 						num_pages: response.num_pages,
 						search_keywords: keywords,
 					});
+					frontEndFileManagerView_Notices.hide();
 				}
 			});
 		},
