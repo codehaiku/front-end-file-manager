@@ -13,7 +13,7 @@
 				<img width="24" src="<?php echo plugins_url();?>/front-end-file-manager/public/images/file-type-icons/folder-open.svg">
 			</a>
 		</li>
-		<li>Trash</li>
+		<li><a href="#" id="js-fefm-trash-multiple-files" title="<?php esc_html_e('Delete selected files', 'front-end-file-manager'); ?>">Trash</a></li>
 		<li class="fefm-search-dir-wrap">
 			<div class="fefm-search-dir-inner-wrap">
 				<form action="" method="GET" id="fefm-search-form">
