@@ -14,6 +14,11 @@ final class Enqueue {
 	{
 		wp_register_script( 'frontend-filemanager', plugins_url() . '/front-end-file-manager/public/front-end-file-manager.js', array('jquery','plupload'), 1.0, true );
 
+		wp_register_script( 'perfect-scrollbar', plugins_url() . '/front-end-file-manager/public/perfect-scrollbar.min.js',
+		 array(), 1.0, true );
+
+		wp_register_style( 'perfect-scrollbar-css', plugins_url() . '/front-end-file-manager/public/css/perfect-scrollbar.css', array() );
+
 		wp_register_style( 'frontend-filemanager-style', plugins_url() . '/front-end-file-manager/public/css/front-end-file-manager.css', array() );
 
 		wp_localize_script( 'frontend-filemanager', 'frontend_filemanager', array(
