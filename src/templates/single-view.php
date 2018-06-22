@@ -16,6 +16,7 @@ action="<?php echo esc_url( rest_url('frontend-filemanager/v1/update') ); ?>">
 			<?php esc_html_e('Describe what this file is all about', 'front-end-file-manager'); ?>
 		</p>
 	</div>
+	
 	<div class="form-group">
 		<label for="file_sharing_type"><?php esc_html_e('Sharing Type', 'front-end-file-manager'); ?></label>
 		<select class="form-control" name="file_sharing_type">
