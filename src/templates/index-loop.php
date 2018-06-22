@@ -22,6 +22,11 @@
 			<a class="fefm-bulk-actions-item" href="#" id="js-fefm-copy-multiple-files" title="<?php esc_html_e('Copy selected files', 'front-end-file-manager'); ?>">
 				<img width="12" src="<?php echo plugins_url();?>/front-end-file-manager/public/images/file-type-icons/copy.svg"> 
 			</a>
+
+			<a class="fefm-bulk-actions-item" href="#" id="js-fefm-move-multiple-files" title="<?php esc_html_e('Move selected files', 'front-end-file-manager'); ?>">
+				<img width="14" src="<?php echo plugins_url();?>/front-end-file-manager/public/images/file-type-icons/arrow-alt-circle-right.svg"> 
+			</a>
+
 			<a class="fefm-bulk-actions-item" href="#" id="js-fefm-share-multiple-files" title="<?php esc_html_e('Share selected files', 'front-end-file-manager'); ?>">
 				<img width="16" src="<?php echo plugins_url();?>/front-end-file-manager/public/images/file-type-icons/share-square.svg"> 
 			</a>

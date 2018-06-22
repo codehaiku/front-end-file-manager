@@ -58,7 +58,6 @@ ul#fefm-controls li {
     display: flex;
     align-items: center;
     background: #fff;
-    position: relative;
     font-size: 13px;
     margin: 0;
     z-index: 56;
