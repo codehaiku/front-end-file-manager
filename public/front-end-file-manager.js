@@ -8,7 +8,8 @@ jQuery(document).ready(function($){
 			search_keywords: "",
 			page: 1,
 			sort_by: "",
-			sort_dir: ""
+			sort_dir: "",
+			max_page: 1,
 		}
 	});
 
@@ -42,6 +43,16 @@ jQuery(document).ready(function($){
 
 	window.fileCollection = new FileCollection;
 
+	// Error Views
+	var FrontEndFileManagerView_Notices = Backbone.View.extend({
+		element: '',
+		render: function( type, message ){
+			console.log(type);
+			console.log(message);
+		},
+	});
+	window.frontEndFileManagerView_Notices = new FrontEndFileManagerView_Notices;
+
 	// Pagination View
 	var FrontEndFileManagerPaging_View = Backbone.View.extend({
 		el: '#fefm-pagination-wrap',
@@ -59,7 +70,50 @@ jQuery(document).ready(function($){
 		el: '#fefm-navigation',
 		events: {
 			"submit #fefm-search-form": 'search',
-			'click #fefm-search-close-search': 'cancel_search'
+			'click #fefm-search-close-search': 'cancel_search',
+			"click #js-fefm-trash-multiple-files": 'trash_multiple',
+
+		},
+		checked_files_collection: function(){
+
+			var checkboxes = $('.js-file-selector');
+			var selected_file_ids = [];
+
+			$.each(checkboxes, function(){
+				if ( $(this).is(':checked') ) {
+					selected_file_ids.push( $(this).attr('data-file-id') );
+				} 
+			});
+
+			return selected_file_ids;
+
+		},
+		trash_multiple: function(e) {
+			e.preventDefault();
+			var selected_files_ids = this.checked_files_collection();
+			var that = this;
+
+			Backbone.sync( 'delete', this.model, {
+				url: frontend_filemanager.rest_url + 'trash-multiple?files=' + selected_files_ids.join(),
+				headers: {
+					'X-WP-Nonce': frontend_filemanager.nonce
+				},
+				success: function( response ) {
+					if ( 'error' !== response.type ) {
+						fefm.browsingProps.set({
+							search_keywords: $('#fefm-file-dir-search').val().trim(),
+							sort_by: that.collection.sort_by,
+							sort_dir: that.collection.sort_dir
+						});
+						fileView.list_files( fefm.browsingProps.attributes );
+					} else {
+						frontEndFileManagerView_Notices.render( 'error', response.message);
+					}
+				},
+				error: function( message, error ){
+					frontEndFileManagerView_Notices.render( 'error', 'There was an error deleting files. Try again later.' );
+				}
+			});
 		},
 		cancel_search: function() {
 			frontEndFileManagerRoute.navigate("list", {trigger: true});
@@ -137,7 +191,7 @@ jQuery(document).ready(function($){
 		events: {
 			"click .fefm-item-file-trash": "trash",
 			"click .file-item-column-file-actions-dropdown": "toggle_action_menu",
-			"click .fefm-toolbar-close": 'close_toolbar'
+			"click .fefm-toolbar-close": 'close_toolbar',
 		},
 		search: function(e) {
 			e.preventDefault();
@@ -272,7 +326,6 @@ jQuery(document).ready(function($){
 						num_pages: response.num_pages,
 						search_keywords: keywords,
 					});
-					
 				}
 			});
 		},
