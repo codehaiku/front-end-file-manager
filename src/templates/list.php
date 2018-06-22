@@ -26,8 +26,6 @@
 		</a>
 		<ul class="file-item-column-file-actions-dropdown-ul inactive">
 			<li><a href="#file/<%=id%>">Edit</a></li>
-			<li><a href="#">Copy</a></li>
-			<li><a href="#">Share</a></li>
 			<li><a data-file-id="<%=id%>" class="fefm-item-file-trash" href="#">Trash</a></li>
 			<li><a class="fefm-toolbar-close" href="#">Close Toolbar</a></li>
 		</ul>
