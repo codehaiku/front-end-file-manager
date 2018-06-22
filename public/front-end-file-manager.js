@@ -1,6 +1,10 @@
 jQuery(document).ready(function($){
 
 	"use strict";
+
+	// Initialize the scrollbar.
+	const ps = new PerfectScrollbar('#fefm-file-window');
+
 	window.fefm = {};
 	// The file browsing model.
 	var browsingPropertyModel = Backbone.Model.extend({
@@ -72,6 +76,7 @@ jQuery(document).ready(function($){
 			this.$el.html( this.template( settings ) );
 		}
 	});
+
 	window.frontEndFileManagerPaging_View = new FrontEndFileManagerPaging_View;
 
 	// Toolbar View
@@ -120,6 +125,7 @@ jQuery(document).ready(function($){
 					} else {
 						frontEndFileManagerView_Notices.render( 'error', response.message);
 					}
+					ps.update();
 				},
 				error: function( message, error ){
 					frontEndFileManagerView_Notices.render( 'error', 'There was an error deleting files. Try again later.' );
@@ -213,9 +219,7 @@ jQuery(document).ready(function($){
 			var check = $( e.target );
 			if( check.is(':checked') ) {
 				check.parent().parent().addClass('active');
-				console.log('active')
 			} else {
-				console.log('not active')
 				check.parent().parent().removeClass('active');
 			}
 			
@@ -285,7 +289,7 @@ jQuery(document).ready(function($){
 					// Delete in collection
 				}
 			});
-
+			ps.update();
 			return;
 
 		},
@@ -311,6 +315,10 @@ jQuery(document).ready(function($){
 				this.$el.append(this.template(file.attributes));
 			}
 
+			$('.fefm-no-files-found').removeClass('active');
+			
+			ps.update();
+
 		},
 		updatePagination: function(settings) {
 			window.frontEndFileManagerPaging_View.render(settings);
@@ -334,7 +342,7 @@ jQuery(document).ready(function($){
 
 			// Hide the no files found
 			$('.fefm-no-files-found').removeClass('active');
-			
+
 			// Upload sorting view.
 			var browsingAttr = fefm.browsingProps.attributes;
 
@@ -386,6 +394,8 @@ jQuery(document).ready(function($){
 					frontEndFileManagerView_Notices.hide();
 				}
 			});
+
+			ps.update();
 		},
 		render: function() {
 			var files = this.collection.models;
@@ -396,6 +406,7 @@ jQuery(document).ready(function($){
 					that.$el.append(that.template(file.attributes));
 				});
 			}
+			ps.update();
 		}
 	}); 
 	window.fileView = new FileView;
