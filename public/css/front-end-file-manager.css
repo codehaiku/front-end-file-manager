@@ -33,6 +33,7 @@ ul#fefm-controls li {
 }
 #fefm-file-window {
     margin: 0 0 25px 0;
+    position: relative;
 }
 #fefm-file-window ul#fefm-wrap-ul {
 	border: 1px solid #ddd;
@@ -60,10 +61,12 @@ ul#fefm-controls li {
     position: relative;
     font-size: 13px;
     margin: 0;
+    z-index: 56;
 }
 #fefm-wrap li.file-item.active:nth-child(even),
 #fefm-wrap li.file-item.active {
     background: #b5e5ff;
+    border-bottom: 1px solid #94daff;
 }
 #fefm-wrap li.file-item a { color: #212121; }
 #fefm-wrap li.file-item:hover{
@@ -363,5 +366,23 @@ ul#fefm-file-actions .file-actions-check-sharing-type { flex-basis: 10%; }
     border-right: 0;
 }
 
+p.fefm-no-files-found {
+    display: none;
+    margin: 0;
+    background: transparent;
+    position: absolute;
+    top: 20%;
+    left: 0;
+    z-index: 20;
+    color: #000000;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    font-size: 20px;
+    text-shadow: 0px 0px 1px #e8e5e5;
+}
 
+p.fefm-no-files-found.active {
+    display: block;
+}
 
