@@ -1,3 +1,6 @@
+#fefm-wrap {
+    position: relative;
+}
 #fefm-wrap > ul, #fefm-wrap > ul > li {
 	padding: 0;
 	margin: 0;
@@ -31,6 +34,8 @@ ul#fefm-controls li {
 ul#fefm-wrap-ul {
 	border: 1px solid #ddd;
     margin-bottom: 25px;
+    min-height: 200px;
+    background: #eee;
 }
 ul#fefm-navigation{
 	background: #eee;
@@ -42,6 +47,7 @@ ul#fefm-navigation{
     align-items: center;
 }
 #fefm-wrap > ul{
+
 }
 #fefm-wrap li.file-item {
     padding: 15px 10px;
@@ -290,3 +296,27 @@ ul#fefm-file-actions .file-actions-check-sharing-type { flex-basis: 10%; }
     border-left: 4px solid transparent;
 }
 
+#fefm-preloader {
+    position: absolute;
+    width: 400px;
+    border-radius: 4px;
+    background: rgba(0,0,0,0.85);
+    padding: 5px 10px;
+    left: calc(50% - 200px);
+    box-shadow: 0px 1px 4px #212121;
+    color: #fff;
+    border: 2px solid #000000;
+    font-size: 13px;
+    transition: all 0.25s ease-in-out;
+    opacity: 0;
+    bottom: -25px;
+}
+
+#fefm-preloader.active {
+    opacity: 1;
+    bottom: 25px;
+}
+
+#fefm-preloader p {
+    margin: 0;
+}
