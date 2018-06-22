@@ -57,6 +57,12 @@
 	</ul>
 
 	<div id="fefm-file-window">
+		<p class="fefm-no-files-found">
+
+			<?php esc_html_e('There are no files inside this directory', 'front-end-file-manager'); ?>
+				<br/>
+			<?php esc_html_e('Drag your files here or click the upload button above', 'front-end-file-manager'); ?>
+		</p>
 		<ul id="fefm-wrap-ul">
 		</ul>
 	</div>
