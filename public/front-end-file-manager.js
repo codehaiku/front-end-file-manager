@@ -153,14 +153,17 @@ jQuery(document).ready(function($){
 		},
 		multiple_file_selector: function(e) {
 			var element = $(e.target);
+
 			if ( ( element ).is(':checked') ) {
 				$.each( $('.js-file-selector'), function(){
-					$(this).attr('checked', 'checked');
+					$(this).attr('checked', 'checked').change();
 				});
+				$('.fefm-bulk-actions').addClass('active');
 			} else {
 				$.each( $('.js-file-selector'), function(){
-					$(this).removeAttr('checked');
+					$(this).removeAttr('checked').change();
 				});
+				$('.fefm-bulk-actions').removeClass('active');
 			}
 		},
 		sort: function(e){
@@ -203,6 +206,36 @@ jQuery(document).ready(function($){
 			"click .fefm-item-file-trash": "trash",
 			"click .file-item-column-file-actions-dropdown": "toggle_action_menu",
 			"click .fefm-toolbar-close": 'close_toolbar',
+			"click .js-file-selector": 'toggle_multiple_actions',
+			"change .js-file-selector": 'highlight_selected'
+		},
+		highlight_selected: function(e){
+			var check = $( e.target );
+			if( check.is(':checked') ) {
+				check.parent().parent().addClass('active');
+				console.log('active')
+			} else {
+				console.log('not active')
+				check.parent().parent().removeClass('active');
+			}
+			
+		},
+		toggle_multiple_actions: function(e){
+			
+			var file_checkers = $(e.target);
+			var counter = 0;
+
+			$.each( $('.js-file-selector'), function(){
+				if ( $(this).is(':checked') ) {
+					counter++;
+				}
+			});
+			
+			if ( counter >= 1 ) {
+				$('.fefm-bulk-actions').addClass('active');
+			} else {
+				$('.fefm-bulk-actions').removeClass('active');
+			}
 		},
 		search: function(e) {
 			e.preventDefault();
@@ -303,6 +336,7 @@ jQuery(document).ready(function($){
 			var browsingAttr = fefm.browsingProps.attributes;
 
 			$('#fefm-check-all-file').removeAttr('checked');
+			$('.fefm-bulk-actions').removeClass('active');
 
 			$('#fefm-file-actions > li > a').removeClass('active asc desc');
 			if ( browsingAttr.sort_by.length >=1 ) {
