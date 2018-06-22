@@ -1,6 +1,6 @@
 <li class="file-item" id="fefm-file-<%=id%>">
 	<div class="file-item-column file-check-selector">
-		<input class="js-file-selector" type="checkbox" name="file[<%=id%>]" />
+		<input class="js-file-selector" type="checkbox" data-file-id="<%=id%>" name="file[<%=id%>]" />
 	</div>
 	<div class="file-item-column file-thumb">
 		<img width="48" src="<%=file_icon%>" />
