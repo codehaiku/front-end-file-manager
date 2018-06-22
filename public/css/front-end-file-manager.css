@@ -375,14 +375,11 @@ p.fefm-no-files-found {
     margin: 0;
     background: transparent;
     position: absolute;
-    top: 20%;
-    left: 0;
+    bottom: 20px;
+    left: 20px;
     z-index: 20;
-    color: #000000;
-    font-weight: bold;
-    text-align: center;
-    width: 100%;
-    font-size: 20px;
+    color: #777;
+    font-size: 14px;
     text-shadow: 0px 0px 1px #e8e5e5;
 }
 
