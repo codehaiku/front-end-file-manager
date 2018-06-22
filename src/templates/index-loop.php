@@ -1,4 +1,5 @@
 <div id="fefm-wrap">
+
 	<ul id="fefm-controls">
 		<li><a class="fefm-controls-btn" id="fefm-controls-btn-uploaded" href="#">Upload</a></li>
 		<li><a class="fefm-controls-btn fefm-controls-btn-link" href="#">New Folder</a></li>
@@ -9,11 +10,23 @@
 
 	<ul id="fefm-navigation">
 		<li>
-			<a href="#list" title="<?php esc_html_e('Go back to root directory', 'front-end-file-manager'); ?>">
-				<img width="24" src="<?php echo plugins_url();?>/front-end-file-manager/public/images/file-type-icons/folder-open.svg">
+			<a href="#list" 
+			title="<?php esc_html_e('Go back to root directory', 'front-end-file-manager'); ?>">
+				<img width="16" src="<?php echo plugins_url();?>/front-end-file-manager/public/images/file-type-icons/folder-open.svg">
 			</a>
 		</li>
-		<li><a href="#" id="js-fefm-trash-multiple-files" title="<?php esc_html_e('Delete selected files', 'front-end-file-manager'); ?>">Trash</a></li>
+
+		<li class="fefm-bulk-actions">
+			<a class="fefm-bulk-actions-item" href="#" id="js-fefm-trash-multiple-files" title="<?php esc_html_e('Delete selected files', 'front-end-file-manager'); ?>">	<img width="12" src="<?php echo plugins_url();?>/front-end-file-manager/public/images/file-type-icons/trash-alt.svg"> 
+			</a>
+			<a class="fefm-bulk-actions-item" href="#" id="js-fefm-copy-multiple-files" title="<?php esc_html_e('Copy selected files', 'front-end-file-manager'); ?>">
+				<img width="12" src="<?php echo plugins_url();?>/front-end-file-manager/public/images/file-type-icons/copy.svg"> 
+			</a>
+			<a class="fefm-bulk-actions-item" href="#" id="js-fefm-share-multiple-files" title="<?php esc_html_e('Share selected files', 'front-end-file-manager'); ?>">
+				<img width="16" src="<?php echo plugins_url();?>/front-end-file-manager/public/images/file-type-icons/share-square.svg"> 
+			</a>
+		</li>
+
 		<li class="fefm-search-dir-wrap">
 			<div class="fefm-search-dir-inner-wrap">
 				<form action="" method="GET" id="fefm-search-form">
@@ -43,8 +56,10 @@
 		</li>
 	</ul>
 
-	<ul id="fefm-wrap-ul">
-	</ul>
+	<div id="fefm-file-window">
+		<ul id="fefm-wrap-ul">
+		</ul>
+	</div>
 
 	<div id="fefm-preloader">
 		<div id="fefm-preloader-wrap">
